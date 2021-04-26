@@ -35,7 +35,7 @@ uses
   SysUtils,
   Graphics,
   dr_voxels,
-  procrock,
+  models,
   dr_voxelizer;
 
 procedure DT_CreateVoxelFromRock(const t: rock_t; const vox: voxelbuffer_p;

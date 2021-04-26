@@ -30,7 +30,7 @@ unit procrock_helpers;
 interface
 
 uses
-  Classes, procrock;
+  Classes, models;
 
 procedure PT_SavePropertiesBinary(const p: properties_t; const s: TStream);
 

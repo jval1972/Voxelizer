@@ -30,7 +30,7 @@ uses
   Windows,
   Graphics,
   dglOpenGL,
-  procrock;
+  models;
 
 var
   gld_max_texturesize: integer = 0;

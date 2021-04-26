@@ -30,7 +30,7 @@ unit dr_md2;
 interface
 
 uses
-  Windows, Classes, SysUtils, procrock;
+  Windows, Classes, SysUtils, models;
 
 procedure SaveRockToMD2Stream(const rock: rock_t; const strm: TStream; const name: string);
 

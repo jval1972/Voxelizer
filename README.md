@@ -1,27 +1,8 @@
-# DOOMROCK
-DOOMROCK is an application that generates rock sprites, models and voxels for the Doom series games based on various input parameters.
+# Voxelizer
 
 ## Features
-Random mesh generation
 
-Export Sprite in Doom sprite format
-
-Out of the box actor definitions for ZDoom & DelphiDoom
-
-Generate WAD or PK3 file with model, voxel, sprite and definitions.
-
-Export model voxel format (sLab6's vox and DelphiDoom's ddvox formats)
-
-Export model in md2 format
-
-Export model in .obj format
-
-Export screenshots to disk
-
-Export screenshots to clipboard
-
-Multiple Undo/Redo
-
+Export md2 models as voxels (sLab6's vox and DelphiDoom's ddvox formats)
 
 ## Downloads
 [version 1.0.2.23 (20210302 - win32)](https://sourceforge.net/projects/doom-rock/files/DOOMROCK_1.0/DOOMROCK_1.0.2.23_bin.zip/download)

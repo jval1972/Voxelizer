@@ -32,7 +32,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, xTGA, jpeg, zBitmap, ComCtrls, ExtCtrls, Buttons, Menus,
-  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, procrock, dr_undo,
+  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, models, dr_undo,
   dr_filemenuhistory, dr_slider;
 
 type
@@ -113,100 +113,7 @@ type
     Label1: TLabel;
     SeedSpeedButton1: TSpeedButton;
     SeedSpeedButton2: TSpeedButton;
-    Label2: TLabel;
-    NumRingsPaintBox: TPaintBox;
-    NumRingsLabel: TLabel;
-    Label3: TLabel;
-    NumSegmentsPaintBox: TPaintBox;
-    NumSegmentsLabel: TLabel;
-    Label4: TLabel;
-    UScalePaintBox: TPaintBox;
-    UScaleLabel: TLabel;
-    VScaleLabel: TLabel;
-    VScalePaintBox: TPaintBox;
-    Label5: TLabel;
-    Label6: TLabel;
-    XScalePaintBox: TPaintBox;
-    XScaleLabel: TLabel;
-    YScaleLabel: TLabel;
-    YScalePaintBox: TPaintBox;
-    Label7: TLabel;
-    Label8: TLabel;
-    ZScalePaintBox: TPaintBox;
-    ZScaleLabel: TLabel;
-    XDeformationLabel: TLabel;
-    XDeformationPaintBox: TPaintBox;
-    Label9: TLabel;
-    Label10: TLabel;
-    YDeformationPaintBox: TPaintBox;
-    YDeformationLabel: TLabel;
-    ZDeformationLabel: TLabel;
-    ZDeformationPaintBox: TPaintBox;
-    Label11: TLabel;
-    Label12: TLabel;
-    XCareenPaintBox: TPaintBox;
-    XCareenLabel: TLabel;
-    YCareenLabel: TLabel;
-    YCareenPaintBox: TPaintBox;
-    Label13: TLabel;
-    Label14: TLabel;
-    ZCareenPaintBox: TPaintBox;
-    ZCareenLabel: TLabel;
-    XOffsetLabel: TLabel;
-    XOffsetPaintBox: TPaintBox;
-    Label15: TLabel;
-    Label16: TLabel;
-    ZOffsetPaintBox: TPaintBox;
-    ZOffsetLabel: TLabel;
-    RDeformationLabel: TLabel;
-    RDeformationPaintBox: TPaintBox;
-    Label17: TLabel;
-    Label18: TLabel;
-    PitRatePaintBox: TPaintBox;
-    PitRateLabel: TLabel;
-    PitElevationLabel: TLabel;
-    PitElevationPaintBox: TPaintBox;
-    Label19: TLabel;
-    Label20: TLabel;
-    GroundLevelHeightPaintBox: TPaintBox;
-    GroundLevelHeightLabel: TLabel;
-    Label21: TLabel;
-    YOffsetPaintBox: TPaintBox;
-    YOffsetLabel: TLabel;
-    Label22: TLabel;
-    XNegativeCutPaintBox: TPaintBox;
-    XNegativeCutLabel: TLabel;
-    Label23: TLabel;
-    XPositiveCutPaintBox: TPaintBox;
-    XPositiveCutLabel: TLabel;
-    Label24: TLabel;
-    YNegativeCutPaintBox: TPaintBox;
-    YNegativeCutLabel: TLabel;
-    YPositiveCutLabel: TLabel;
-    YPositiveCutPaintBox: TPaintBox;
-    Label27: TLabel;
-    Label25: TLabel;
-    ZNegativeCutPaintBox: TPaintBox;
-    ZNegativeCutLabel: TLabel;
-    ZPositiveCutLabel: TLabel;
-    ZPositiveCutPaintBox: TPaintBox;
-    Label29: TLabel;
-    Label26: TLabel;
-    Label28: TLabel;
-    UOffsetPaintBox: TPaintBox;
-    VOffsetPaintBox: TPaintBox;
-    VOffsetLabel: TLabel;
-    UOffsetLabel: TLabel;
-    Label30: TLabel;
-    RecessRatePaintBox: TPaintBox;
-    RecessRateLabel: TLabel;
-    RecessStrengthLabel: TLabel;
-    RecessStrengthPaintBox: TPaintBox;
-    Label33: TLabel;
     SeedEdit: TEdit;
-    RecalcUVCheckBox: TCheckBox;
-    CompleteRockCheckBox: TCheckBox;
-    TabSheet2: TTabSheet;
     RockImage: TImage;
     LoadTrunkBitBtn1: TBitBtn;
     procedure FormCreate(Sender: TObject);
@@ -250,8 +157,6 @@ type
     procedure ExportScreenshot1Click(Sender: TObject);
     procedure Sprite1Click(Sender: TObject);
     procedure Voxel1Click(Sender: TObject);
-    procedure RecalcUVCheckBoxClick(Sender: TObject);
-    procedure CompleteRockCheckBoxClick(Sender: TObject);
     procedure MD2ModelExportClick(Sender: TObject);
     procedure ApplicationEvents1Activate(Sender: TObject);
   private
@@ -268,36 +173,6 @@ type
     filemenuhistory: TFileMenuHistory;
     glneedsupdate: boolean;
     needsrecalc: boolean;
-    NumRingsSlider: TSliderHook;
-    NumSegmentsSlider: TSliderHook;
-    UScaleSlider: TSliderHook;
-    VScaleSlider: TSliderHook;
-    UOffsetSlider: TSliderHook;
-    VOffsetSlider: TSliderHook;
-    XScaleSlider: TSliderHook;
-    YScaleSlider: TSliderHook;
-    ZScaleSlider: TSliderHook;
-    XDeformationSlider: TSliderHook;
-    YDeformationSlider: TSliderHook;
-    ZDeformationSlider: TSliderHook;
-    XCareenSlider: TSliderHook;
-    YCareenSlider: TSliderHook;
-    ZCareenSlider: TSliderHook;
-    XOffsetSlider: TSliderHook;
-    YOffsetSlider: TSliderHook;
-    ZOffsetSlider: TSliderHook;
-    RDeformationSlider: TSliderHook;
-    PitRateSlider: TSliderHook;
-    PitElevationSlider: TSliderHook;
-    GroundLevelHeightSlider: TSliderHook;
-    XNegativeCutSlider: TSliderHook;
-    XPositiveCutSlider: TSliderHook;
-    YNegativeCutSlider: TSliderHook;
-    YPositiveCutSlider: TSliderHook;
-    ZNegativeCutSlider: TSliderHook;
-    ZPositiveCutSlider: TSliderHook;
-    RecessRateSlider: TSliderHook;
-    RecessStrengthSlider: TSliderHook;
     closing: boolean;
     procedure Idle(Sender: TObject; var Done: Boolean);
     function CheckCanClose: boolean;
@@ -340,7 +215,7 @@ uses
 {$R *.dfm}
 
 resourcestring
-  rsTitle = 'DOOMROCK Sprite Generator';
+  rsTitle = 'Voxelizer';
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
@@ -454,126 +329,6 @@ begin
   needsrecalc := True;
 
   TabSheet1.DoubleBuffered := True;
-
-  NumRingsSlider := TSliderHook.Create(NumRingsPaintBox);
-  NumRingsSlider.Min := 2;
-  NumRingsSlider.Max := MAXRINGS div 2 - 1;
-
-  NumSegmentsSlider := TSliderHook.Create(NumSegmentsPaintBox);
-  NumSegmentsSlider.Min := 3;
-  NumSegmentsSlider.Max := MAXSEGMENTS - 1;
-
-  UScaleSlider := TSliderHook.Create(UScalePaintBox);
-  UScaleSlider.Min := 0.1;
-  UScaleSlider.Max := 4.0;
-
-  VScaleSlider := TSliderHook.Create(VScalePaintBox);
-  VScaleSlider.Min := 0.1;
-  VScaleSlider.Max := 4.0;
-
-  UOffsetSlider := TSliderHook.Create(UOffsetPaintBox);
-  UOffsetSlider.Min := -1.0;
-  UOffsetSlider.Max := 1.0;
-
-  VOffsetSlider := TSliderHook.Create(VOffsetPaintBox);
-  VOffsetSlider.Min := -1.0;
-  VOffsetSlider.Max := 1.0;
-
-  XScaleSlider := TSliderHook.Create(XScalePaintBox);
-  XScaleSlider.Min := 0.5;
-  XScaleSlider.Max := 2.0;
-
-  YScaleSlider := TSliderHook.Create(YScalePaintBox);
-  YScaleSlider.Min := 0.5;
-  YScaleSlider.Max := 2.0;
-
-  ZScaleSlider := TSliderHook.Create(ZScalePaintBox);
-  ZScaleSlider.Min := 0.5;
-  ZScaleSlider.Max := 2.0;
-
-  XDeformationSlider := TSliderHook.Create(XDeformationPaintBox);
-  XDeformationSlider.Min := 0.0;
-  XDeformationSlider.Max := 0.2;
-
-  YDeformationSlider := TSliderHook.Create(YDeformationPaintBox);
-  YDeformationSlider.Min := 0.0;
-  YDeformationSlider.Max := 0.2;
-
-  ZDeformationSlider := TSliderHook.Create(ZDeformationPaintBox);
-  ZDeformationSlider.Min := 0.0;
-  ZDeformationSlider.Max := 0.2;
-
-  XCareenSlider := TSliderHook.Create(XCareenPaintBox);
-  XCareenSlider.Min := -0.5;
-  XCareenSlider.Max := 0.5;
-
-  YCareenSlider := TSliderHook.Create(YCareenPaintBox);
-  YCareenSlider.Min := -0.5;
-  YCareenSlider.Max := 0.5;
-
-  ZCareenSlider := TSliderHook.Create(ZCareenPaintBox);
-  ZCareenSlider.Min := -0.5;
-  ZCareenSlider.Max := 0.5;
-
-  XOffsetSlider := TSliderHook.Create(XOffsetPaintBox);
-  XOffsetSlider.Min := -0.5;
-  XOffsetSlider.Max := 0.5;
-
-  YOffsetSlider := TSliderHook.Create(YOffsetPaintBox);
-  YOffsetSlider.Min := -0.5;
-  YOffsetSlider.Max := 0.5;
-
-  ZOffsetSlider := TSliderHook.Create(ZOffsetPaintBox);
-  ZOffsetSlider.Min := -0.5;
-  ZOffsetSlider.Max := 0.5;
-
-  RDeformationSlider := TSliderHook.Create(RDeformationPaintBox);
-  RDeformationSlider.Min := -0.5;
-  RDeformationSlider.Max := 1.5;
-
-  PitRateSlider := TSliderHook.Create(PitRatePaintBox);
-  PitRateSlider.Min := 0.0;
-  PitRateSlider.Max := 1.0;
-
-  PitElevationSlider := TSliderHook.Create(PitElevationPaintBox);
-  PitElevationSlider.Min := 0.5;
-  PitElevationSlider.Max := 2.0;
-
-  GroundLevelHeightSlider := TSliderHook.Create(GroundLevelHeightPaintBox);
-  GroundLevelHeightSlider.Min := 0.0;
-  GroundLevelHeightSlider.Max := 1.0;
-
-  XNegativeCutSlider := TSliderHook.Create(XNegativeCutPaintBox);
-  XNegativeCutSlider.Min := 0.1;
-  XNegativeCutSlider.Max := 1.0;
-
-  XPositiveCutSlider := TSliderHook.Create(XPositiveCutPaintBox);
-  XPositiveCutSlider.Min := 0.1;
-  XPositiveCutSlider.Max := 1.0;
-
-  YNegativeCutSlider := TSliderHook.Create(YNegativeCutPaintBox);
-  YNegativeCutSlider.Min := 0.1;
-  YNegativeCutSlider.Max := 1.0;
-
-  YPositiveCutSlider := TSliderHook.Create(YPositiveCutPaintBox);
-  YPositiveCutSlider.Min := 0.1;
-  YPositiveCutSlider.Max := 1.0;
-
-  ZNegativeCutSlider := TSliderHook.Create(ZNegativeCutPaintBox);
-  ZNegativeCutSlider.Min := 0.1;
-  ZNegativeCutSlider.Max := 1.0;
-
-  ZPositiveCutSlider := TSliderHook.Create(ZPositiveCutPaintBox);
-  ZPositiveCutSlider.Min := 0.1;
-  ZPositiveCutSlider.Max := 1.0;
-
-  RecessRateSlider := TSliderHook.Create(RecessRatePaintBox);
-  RecessRateSlider.Min := 0.0;
-  RecessRateSlider.Max := 1.0;
-
-  RecessStrengthSlider := TSliderHook.Create(RecessStrengthPaintBox);
-  RecessStrengthSlider.Min := 0.0;
-  RecessStrengthSlider.Max := 0.9;
 
   doCreate := True;
   if ParamCount > 0 then
@@ -795,37 +550,6 @@ begin
 
   filemenuhistory.Free;
 
-  NumRingsSlider.Free;
-  NumSegmentsSlider.Free;
-  UScaleSlider.Free;
-  VScaleSlider.Free;
-  UOffsetSlider.Free;
-  VOffsetSlider.Free;
-  XScaleSlider.Free;
-  YScaleSlider.Free;
-  ZScaleSlider.Free;
-  XDeformationSlider.Free;
-  YDeformationSlider.Free;
-  ZDeformationSlider.Free;
-  XCareenSlider.Free;
-  YCareenSlider.Free;
-  ZCareenSlider.Free;
-  XOffsetSlider.Free;
-  YOffsetSlider.Free;
-  ZOffsetSlider.Free;
-  RDeformationSlider.Free;
-  PitRateSlider.Free;
-  PitElevationSlider.Free;
-  GroundLevelHeightSlider.Free;
-  XNegativeCutSlider.Free;
-  XPositiveCutSlider.Free;
-  YNegativeCutSlider.Free;
-  YPositiveCutSlider.Free;
-  ZNegativeCutSlider.Free;
-  ZPositiveCutSlider.Free;
-  RecessRateSlider.Free;
-  RecessStrengthSlider.Free;
-
   rock.Free;
 end;
 
@@ -836,7 +560,7 @@ begin
     PChar(Format('%s'#13#10 +
     'Version ' + I_VersionBuilt + #13#10 +
     'Copyright (c) 2021, jvalavanis@gmail.com'#13#10 +
-    #13#10'A tool to create rock sprites for Doom.'#13#10,
+    #13#10'A tool to create voxels from md2 models.'#13#10,
         [rsTitle])),
     PChar(rsTitle),
     MB_OK or MB_ICONINFORMATION or MB_APPLMODAL);
@@ -1222,166 +946,10 @@ end;
 
 procedure TForm1.RockToSliders;
 begin
-  NumRingsSlider.OnSliderHookChange := nil;
-  NumSegmentsSlider.OnSliderHookChange := nil;
-  UScaleSlider.OnSliderHookChange := nil;
-  VScaleSlider.OnSliderHookChange := nil;
-  UOffsetSlider.OnSliderHookChange := nil;
-  VOffsetSlider.OnSliderHookChange := nil;
-  XScaleSlider.OnSliderHookChange := nil;
-  YScaleSlider.OnSliderHookChange := nil;
-  ZScaleSlider.OnSliderHookChange := nil;
-  XDeformationSlider.OnSliderHookChange := nil;
-  YDeformationSlider.OnSliderHookChange := nil;
-  ZDeformationSlider.OnSliderHookChange := nil;
-  XCareenSlider.OnSliderHookChange := nil;
-  YCareenSlider.OnSliderHookChange := nil;
-  ZCareenSlider.OnSliderHookChange := nil;
-  XOffsetSlider.OnSliderHookChange := nil;
-  YOffsetSlider.OnSliderHookChange := nil;
-  ZOffsetSlider.OnSliderHookChange := nil;
-  RDeformationSlider.OnSliderHookChange := nil;
-  PitRateSlider.OnSliderHookChange := nil;
-  PitElevationSlider.OnSliderHookChange := nil;
-  GroundLevelHeightSlider.OnSliderHookChange := nil;
-  XNegativeCutSlider.OnSliderHookChange := nil;
-  XPositiveCutSlider.OnSliderHookChange := nil;
-  YNegativeCutSlider.OnSliderHookChange := nil;
-  YPositiveCutSlider.OnSliderHookChange := nil;
-  ZNegativeCutSlider.OnSliderHookChange := nil;
-  ZPositiveCutSlider.OnSliderHookChange := nil;
-  RecessRateSlider.OnSliderHookChange := nil;
-  RecessStrengthSlider.OnSliderHookChange := nil;
-
-  NumRingsSlider.Position := rock.mProperties.mNumRings;
-  NumSegmentsSlider.Position := rock.mProperties.mNumSegments;
-  UScaleSlider.Position := rock.mProperties.mUScale;
-  VScaleSlider.Position := rock.mProperties.mVScale;
-  UOffsetSlider.Position := rock.mProperties.mUOffset;
-  VOffsetSlider.Position := rock.mProperties.mVOffset;
-  XScaleSlider.Position := rock.mProperties.mXScale;
-  YScaleSlider.Position := rock.mProperties.mYScale;
-  ZScaleSlider.Position := rock.mProperties.mZScale;
-  XDeformationSlider.Position := rock.mProperties.mXDeformFactor;
-  YDeformationSlider.Position := rock.mProperties.mYDeformFactor;
-  ZDeformationSlider.Position := rock.mProperties.mZDeformFactor;
-  XCareenSlider.Position := rock.mProperties.mXCareen;
-  YCareenSlider.Position := rock.mProperties.mYCareen;
-  ZCareenSlider.Position := rock.mProperties.mZCareen;
-  XOffsetSlider.Position := rock.mProperties.mXOffset;
-  YOffsetSlider.Position := rock.mProperties.mYOffset;
-  ZOffsetSlider.Position := rock.mProperties.mZOffset;
-  RDeformationSlider.Position := rock.mProperties.mRDeformFactor;
-  PitRateSlider.Position := rock.mProperties.mPitRate;
-  PitElevationSlider.Position := rock.mProperties.mPitElevation;
-  GroundLevelHeightSlider.Position := rock.mProperties.mGroundLevelHeight;
-  XNegativeCutSlider.Position := rock.mProperties.mXNegativeCut;
-  XPositiveCutSlider.Position := rock.mProperties.mXPositiveCut;
-  YNegativeCutSlider.Position := rock.mProperties.mYNegativeCut;
-  YPositiveCutSlider.Position := rock.mProperties.mYPositiveCut;
-  ZNegativeCutSlider.Position := rock.mProperties.mZNegativeCut;
-  ZPositiveCutSlider.Position := rock.mProperties.mZPositiveCut;
-  RecessRateSlider.Position := rock.mProperties.mRecessRate;
-  RecessStrengthSlider.Position := rock.mProperties.mRecessStrength;
-
-  RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
-  CompleteRockCheckBox.Checked := rock.mProperties.mComplete;
-
-  NumRingsPaintBox.Invalidate;
-  NumSegmentsPaintBox.Invalidate;
-  UScalePaintBox.Invalidate;
-  VScalePaintBox.Invalidate;
-  UOffsetPaintBox.Invalidate;
-  VOffsetPaintBox.Invalidate;
-  XScalePaintBox.Invalidate;
-  YScalePaintBox.Invalidate;
-  ZScalePaintBox.Invalidate;
-  XDeformationPaintBox.Invalidate;
-  YDeformationPaintBox.Invalidate;
-  ZDeformationPaintBox.Invalidate;
-  XCareenPaintBox.Invalidate;
-  YCareenPaintBox.Invalidate;
-  ZCareenPaintBox.Invalidate;
-  XOffsetPaintBox.Invalidate;
-  YOffsetPaintBox.Invalidate;
-  ZOffsetPaintBox.Invalidate;
-  RDeformationPaintBox.Invalidate;
-  PitRatePaintBox.Invalidate;
-  PitElevationPaintBox.Invalidate;
-  GroundLevelHeightPaintBox.Invalidate;
-  XNegativeCutPaintBox.Invalidate;
-  XPositiveCutPaintBox.Invalidate;
-  YNegativeCutPaintBox.Invalidate;
-  YPositiveCutPaintBox.Invalidate;
-  ZNegativeCutPaintBox.Invalidate;
-  ZPositiveCutPaintBox.Invalidate;
-  RecessRatePaintBox.Invalidate;
-  RecessStrengthPaintBox.Invalidate;
-
-  NumRingsSlider.OnSliderHookChange := ControlsToRock;
-  NumSegmentsSlider.OnSliderHookChange := ControlsToRock;
-  UScaleSlider.OnSliderHookChange := ControlsToRock;
-  VScaleSlider.OnSliderHookChange := ControlsToRock;
-  UOffsetSlider.OnSliderHookChange := ControlsToRock;
-  VOffsetSlider.OnSliderHookChange := ControlsToRock;
-  XScaleSlider.OnSliderHookChange := ControlsToRock;
-  YScaleSlider.OnSliderHookChange := ControlsToRock;
-  ZScaleSlider.OnSliderHookChange := ControlsToRock;
-  XDeformationSlider.OnSliderHookChange := ControlsToRock;
-  YDeformationSlider.OnSliderHookChange := ControlsToRock;
-  ZDeformationSlider.OnSliderHookChange := ControlsToRock;
-  XCareenSlider.OnSliderHookChange := ControlsToRock;
-  YCareenSlider.OnSliderHookChange := ControlsToRock;
-  ZCareenSlider.OnSliderHookChange := ControlsToRock;
-  XOffsetSlider.OnSliderHookChange := ControlsToRock;
-  YOffsetSlider.OnSliderHookChange := ControlsToRock;
-  ZOffsetSlider.OnSliderHookChange := ControlsToRock;
-  RDeformationSlider.OnSliderHookChange := ControlsToRock;
-  PitRateSlider.OnSliderHookChange := ControlsToRock;
-  PitElevationSlider.OnSliderHookChange := ControlsToRock;
-  GroundLevelHeightSlider.OnSliderHookChange := ControlsToRock;
-  XNegativeCutSlider.OnSliderHookChange := ControlsToRock;
-  XPositiveCutSlider.OnSliderHookChange := ControlsToRock;
-  YNegativeCutSlider.OnSliderHookChange := ControlsToRock;
-  YPositiveCutSlider.OnSliderHookChange := ControlsToRock;
-  ZNegativeCutSlider.OnSliderHookChange := ControlsToRock;
-  ZPositiveCutSlider.OnSliderHookChange := ControlsToRock;
-  RecessRateSlider.OnSliderHookChange := ControlsToRock;
-  RecessStrengthSlider.OnSliderHookChange := ControlsToRock;
 end;
 
 procedure TForm1.SlidersToLabels;
 begin
-  NumRingsLabel.Caption := Format('%d', [Round(NumRingsSlider.Position)]);
-  NumSegmentsLabel.Caption := Format('%d', [Round(NumSegmentsSlider.Position)]);
-  UScaleLabel.Caption := Format('%1.3f', [UScaleSlider.Position]);
-  VScaleLabel.Caption := Format('%1.3f', [VScaleSlider.Position]);
-  UOffsetLabel.Caption := Format('%1.3f', [UOffsetSlider.Position]);
-  VOffsetLabel.Caption := Format('%1.3f', [VOffsetSlider.Position]);
-  XScaleLabel.Caption := Format('%1.3f', [XScaleSlider.Position]);
-  YScaleLabel.Caption := Format('%1.3f', [YScaleSlider.Position]);
-  ZScaleLabel.Caption := Format('%1.3f', [ZScaleSlider.Position]);
-  XDeformationLabel.Caption := Format('%1.3f', [XDeformationSlider.Position]);
-  YDeformationLabel.Caption := Format('%1.3f', [YDeformationSlider.Position]);
-  ZDeformationLabel.Caption := Format('%1.3f', [ZDeformationSlider.Position]);
-  XCareenLabel.Caption := Format('%1.3f', [XCareenSlider.Position]);
-  YCareenLabel.Caption := Format('%1.3f', [YCareenSlider.Position]);
-  ZCareenLabel.Caption := Format('%1.3f', [ZCareenSlider.Position]);
-  XOffsetLabel.Caption := Format('%1.3f', [XOffsetSlider.Position]);
-  YOffsetLabel.Caption := Format('%1.3f', [YOffsetSlider.Position]);
-  ZOffsetLabel.Caption := Format('%1.3f', [ZOffsetSlider.Position]);
-  RDeformationLabel.Caption := Format('%1.3f', [RDeformationSlider.Position]);
-  PitRateLabel.Caption := Format('%1.3f', [PitRateSlider.Position]);
-  PitElevationLabel.Caption := Format('%1.3f', [PitElevationSlider.Position]);
-  GroundLevelHeightLabel.Caption := Format('%1.3f', [GroundLevelHeightSlider.Position]);
-  XNegativeCutLabel.Caption := Format('%1.3f', [XNegativeCutSlider.Position]);
-  XPositiveCutLabel.Caption := Format('%1.3f', [XPositiveCutSlider.Position]);
-  YNegativeCutLabel.Caption := Format('%1.3f', [YNegativeCutSlider.Position]);
-  YPositiveCutLabel.Caption := Format('%1.3f', [YPositiveCutSlider.Position]);
-  ZNegativeCutLabel.Caption := Format('%1.3f', [ZNegativeCutSlider.Position]);
-  ZPositiveCutLabel.Caption := Format('%1.3f', [ZPositiveCutSlider.Position]);
-  RecessRateLabel.Caption := Format('%1.3f', [RecessRateSlider.Position]);
-  RecessStrengthLabel.Caption := Format('%1.3f', [RecessStrengthSlider.Position]);
 end;
 
 procedure TForm1.RockToControls;
@@ -1390,8 +958,6 @@ begin
     Exit;
 
   SeedEdit.Text := IntToStr(rock.mProperties.mSeed);
-  RecalcUVCheckBox.Checked := rock.mProperties.mRecalcUV;
-  CompleteRockCheckBox.Checked := rock.mProperties.mComplete;
 
   RockToSliders;
   SlidersToLabels;
@@ -1405,36 +971,6 @@ begin
   SaveUndo;
   SlidersToLabels;
   rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 661);
-  rock.mProperties.mNumRings := Round(NumRingsSlider.Position);
-  rock.mProperties.mNumSegments := Round(NumSegmentsSlider.Position);
-  rock.mProperties.mUScale := UScaleSlider.Position;
-  rock.mProperties.mVScale := VScaleSlider.Position;
-  rock.mProperties.mUOffset := UOffsetSlider.Position;
-  rock.mProperties.mVOffset := VOffsetSlider.Position;
-  rock.mProperties.mXScale := XScaleSlider.Position;
-  rock.mProperties.mYScale := YScaleSlider.Position;
-  rock.mProperties.mZScale := ZScaleSlider.Position;
-  rock.mProperties.mXDeformFactor := XDeformationSlider.Position;
-  rock.mProperties.mYDeformFactor := YDeformationSlider.Position;
-  rock.mProperties.mZDeformFactor := ZDeformationSlider.Position;
-  rock.mProperties.mXCareen := XCareenSlider.Position;
-  rock.mProperties.mYCareen := YCareenSlider.Position;
-  rock.mProperties.mZCareen := ZCareenSlider.Position;
-  rock.mProperties.mXOffset := XOffsetSlider.Position;
-  rock.mProperties.mYOffset := YOffsetSlider.Position;
-  rock.mProperties.mZOffset := ZOffsetSlider.Position;
-  rock.mProperties.mRDeformFactor := RDeformationSlider.Position;
-  rock.mProperties.mPitRate := PitRateSlider.Position;
-  rock.mProperties.mPitElevation := PitElevationSlider.Position;
-  rock.mProperties.mGroundLevelHeight := GroundLevelHeightSlider.Position;
-  rock.mProperties.mXNegativeCut := XNegativeCutSlider.Position;
-  rock.mProperties.mXPositiveCut := XPositiveCutSlider.Position;
-  rock.mProperties.mYNegativeCut := YNegativeCutSlider.Position;
-  rock.mProperties.mYPositiveCut := YPositiveCutSlider.Position;
-  rock.mProperties.mZNegativeCut := ZNegativeCutSlider.Position;
-  rock.mProperties.mZPositiveCut := ZPositiveCutSlider.Position;
-  rock.mProperties.mRecessRate := RecessRateSlider.Position;
-  rock.mProperties.mRecessStrength := RecessStrengthSlider.Position;
 
   needsrecalc := True;
   changed := True;
@@ -1549,22 +1085,6 @@ begin
     Screen.Cursor := crDefault;
   end;
   FreeMem(buf, SizeOf(voxelbuffer_t));
-end;
-
-procedure TForm1.RecalcUVCheckBoxClick(Sender: TObject);
-begin
-  SaveUndo;
-  rock.mProperties.mRecalcUV := RecalcUVCheckBox.Checked;
-  needsrecalc := True;
-  changed := True;
-end;
-
-procedure TForm1.CompleteRockCheckBoxClick(Sender: TObject);
-begin
-  SaveUndo;
-  rock.mProperties.mComplete := CompleteRockCheckBox.Checked;
-  needsrecalc := True;
-  changed := True;
 end;
 
 procedure TForm1.MD2ModelExportClick(Sender: TObject);

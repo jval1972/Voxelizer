@@ -31,7 +31,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, Buttons, dr_soft3d, procrock, ComCtrls;
+  Dialogs, StdCtrls, ExtCtrls, Buttons, dr_soft3d, models, ComCtrls;
 
 type
   TExportSpriteForm = class(TForm)

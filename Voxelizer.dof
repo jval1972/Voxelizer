@@ -115,7 +115,7 @@ AutoIncBuild=1
 MajorVer=1
 MinorVer=0
 Release=2
-Build=24
+Build=25
 Debug=0
 PreRelease=0
 Special=0
@@ -125,13 +125,13 @@ Locale=1033
 CodePage=1252
 [Version Info Keys]
 CompanyName=Jim Valavanis
-FileDescription=DOOMROCK Sprite Generator
-FileVersion=1.0.2.24
-InternalName=DOOMROCK
+FileDescription=Voxelizer
+FileVersion=1.0.2.25
+InternalName=Voxelizer
 LegalCopyright=© 2021, jvalavanis@gmail.com
 LegalTrademarks=© 2021, jvalavanis@gmail.com
-OriginalFilename=DOOMROCK.exe
-ProductName=DOOMROCK Sprite Generator
+OriginalFilename=Voxelizer.exe
+ProductName=Voxelizer
 ProductVersion=1.0
 [HistoryLists\hlDebugSourcePath]
 Count=2

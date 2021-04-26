@@ -30,7 +30,7 @@ unit dr_ddmodel;
 interface
 
 uses
-  Windows, Classes, SysUtils, procrock;
+  Windows, Classes, SysUtils, models;
 
 function GetDDModelDeclaration(const rock: rock_t): string;
 
