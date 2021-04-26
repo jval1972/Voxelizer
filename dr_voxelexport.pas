@@ -38,7 +38,7 @@ uses
   models,
   dr_voxelizer;
 
-procedure DT_CreateVoxelFromRock(const t: rock_t; const vox: voxelbuffer_p;
+procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
   const voxsize: integer; const rocktex: TBitmap);
 
 implementation
@@ -46,7 +46,7 @@ implementation
 uses
   dr_defs;
 
-procedure DT_CreateVoxelFacesFromRock(const mVertCount, mFaceCount: integer;
+procedure DT_CreateVoxelFacesFromModel(const mVertCount, mFaceCount: integer;
   const mVert: array of fvec5_t; const mFace: array of ivec3_t;
   const scale: single; const vox: voxelbuffer_p;
   const voxsize: integer; const tex: TBitmap; const opaque: boolean);
@@ -73,7 +73,7 @@ begin
   end;
 end;
 
-procedure DT_CreateVoxelFromRock(const t: rock_t; const vox: voxelbuffer_p;
+procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
   const voxsize: integer; const rocktex: TBitmap);
 var
   xmin, xmax, ymin, ymax, zmin, zmax: single;
@@ -126,7 +126,7 @@ begin
 
   scale := (voxsize - 1) / scale;
 
-  DT_CreateVoxelFacesFromRock(t.mVertCount, t.mFaceCount, t.mVert, t.mFace,
+  DT_CreateVoxelFacesFromModel(t.mVertCount, t.mFaceCount, t.mVert, t.mFace,
     scale, vox, voxsize, rocktex, true);
 end;
 

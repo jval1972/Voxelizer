@@ -22,7 +22,7 @@
 //  Export Voxel Form
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/doom-model/
 //------------------------------------------------------------------------------
 
 unit frm_exportvoxel;
@@ -66,16 +66,16 @@ type
   private
     { Private declarations }
   protected
-    rock: rock_t;
-    rocktex: TBitmap;
+    model: model_t;
+    modeltex: TBitmap;
     vox: voxelbuffer_p;
     procedure UpdateControls;
     procedure CreateVoxel;
   public
     { Public declarations }
     voxsize: integer;
-    procedure SetRockVoxelParams(const arock: rock_t; const avox: voxelbuffer_p;
-      arocktex: TBitmap);
+    procedure SetModelVoxelParams(const amodel: model_t; const avox: voxelbuffer_p;
+      amodeltex: TBitmap);
   end;
 
 implementation
@@ -91,8 +91,8 @@ procedure TExportVoxelForm.FormCreate(Sender: TObject);
 var
   i: integer;
 begin
-  rock := nil;
-  rocktex := nil;
+  model := nil;
+  modeltex := nil;
   vox := nil;
 
   DoubleBuffered := True;
@@ -125,19 +125,19 @@ begin
     PatchRadioGroup.ItemIndex := 0;
 end;
 
-procedure TExportVoxelForm.SetRockVoxelParams(const arock: rock_t; const avox: voxelbuffer_p;
-  arocktex: TBitmap);
+procedure TExportVoxelForm.SetModelVoxelParams(const amodel: model_t; const avox: voxelbuffer_p;
+  amodeltex: TBitmap);
 begin
-  rock := arock;
+  model := amodel;
   vox := avox;
-  rocktex := arocktex;
+  modeltex := amodeltex;
   CreateVoxel;
   UpdateControls;
 end;
 
 procedure TExportVoxelForm.CreateVoxel;
 begin
-  if (rock = nil) or (vox = nil) or (rocktex = nil) then
+  if (model = nil) or (vox = nil) or (modeltex = nil) then
     Exit;
 
   Screen.Cursor := crHourglass;
@@ -149,7 +149,7 @@ begin
     else
       voxsize := 256;
     end;
-    DT_CreateVoxelFromRock(rock, vox, voxsize, rocktex);
+    DT_CreateVoxelFromModel(model, vox, voxsize, modeltex);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -175,7 +175,7 @@ var
   x, y: integer;
   ln: PLongWordArray;
 begin
-  if (rock = nil) or (vox = nil) or (rocktex = nil) then
+  if (model = nil) or (vox = nil) or (modeltex = nil) then
     Exit;
 
   b := TBitmap.Create;

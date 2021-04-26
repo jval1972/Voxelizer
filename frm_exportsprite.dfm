@@ -12940,7 +12940,7 @@ object ExportSpriteForm: TExportSpriteForm
     Width = 326
     Height = 345
     Caption = ' Preview '
-    TabOrder = 7
+    TabOrder = 6
     object Panel3: TPanel
       Left = 2
       Top = 15
@@ -13047,7 +13047,7 @@ object ExportSpriteForm: TExportSpriteForm
     Align = alBottom
     BevelOuter = bvNone
     Caption = ' '
-    TabOrder = 8
+    TabOrder = 7
     object Panel2: TPanel
       Left = 461
       Top = 0
@@ -13126,7 +13126,7 @@ object ExportSpriteForm: TExportSpriteForm
       Height = 21
       MaxLength = 25
       TabOrder = 0
-      Text = 'DoomRock1'
+      Text = 'Actor1'
     end
     object EditorNumberEdit: TEdit
       Left = 88
@@ -13135,7 +13135,7 @@ object ExportSpriteForm: TExportSpriteForm
       Height = 21
       MaxLength = 5
       TabOrder = 1
-      Text = '11000'
+      Text = '12000'
       OnKeyPress = CheckNumericEdit
     end
     object RadiusEdit: TEdit
@@ -13189,7 +13189,7 @@ object ExportSpriteForm: TExportSpriteForm
     Width = 177
     Height = 145
     Caption = ' Voxel '
-    TabOrder = 6
+    TabOrder = 5
     object GenerateVoxelCheckBox: TCheckBox
       Left = 16
       Top = 24
@@ -13236,23 +13236,6 @@ object ExportSpriteForm: TExportSpriteForm
       TabOrder = 4
       TabStop = True
       OnClick = AutoVoxSizeRadioButtonClick
-    end
-  end
-  object ModelGroupBox: TGroupBox
-    Left = 232
-    Top = 216
-    Width = 177
-    Height = 57
-    Caption = ' Model '
-    TabOrder = 5
-    object GenerateModelCheckBox: TCheckBox
-      Left = 16
-      Top = 24
-      Width = 97
-      Height = 17
-      Caption = 'Generate model'
-      TabOrder = 0
-      OnClick = GenerateVoxelCheckBoxClick
     end
   end
   object SaveDialog1: TSaveDialog

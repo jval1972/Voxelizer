@@ -22,7 +22,7 @@
 //  Export Sprite Form
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/doom-model/
 //------------------------------------------------------------------------------
 
 unit frm_exportsprite;
@@ -76,8 +76,6 @@ type
     voxRadioButton64x64: TRadioButton;
     voxRadioButton128x128: TRadioButton;
     voxRadioButton256x256: TRadioButton;
-    ModelGroupBox: TGroupBox;
-    GenerateModelCheckBox: TCheckBox;
     SolidCheckBox: TCheckBox;
     AutoVoxSizeRadioButton: TRadioButton;
     procedure SpritePrefixButtonClick(Sender: TObject);
@@ -120,8 +118,8 @@ type
     procedure DoExportSpritePK3;
   public
     { Public declarations }
-    rock: rock_t;
-    rocktex: TBitmap;
+    model: model_t;
+    modeltex: TBitmap;
     procedure PrepareTextures;
     procedure DoExportSprite;
   end;
@@ -132,7 +130,6 @@ implementation
 
 uses
   Math,
-  procrock_helpers,
   dr_defs,
   dr_utils,
   dr_wadwriter,
@@ -142,7 +139,6 @@ uses
   dr_voxels,
   dr_voxelexport,
   dr_pk3writer,
-  dr_md2,
   pngimage,
   frm_spriteprefix;
 
@@ -185,10 +181,10 @@ begin
   buffer.Height := fdeviceheight;
   buffer.PixelFormat := pf32bit;
   needs3dupdate := True;
-  rocktex := TBitmap.Create;
-  rocktex.Width := 256;
-  rocktex.Height := 256;
-  rocktex.PixelFormat := pf32bit;
+  modeltex := TBitmap.Create;
+  modeltex.Width := 256;
+  modeltex.Height := 256;
+  modeltex.PixelFormat := pf32bit;
 
   fviewdist := opt_viewdist / OPT_TO_FLOAT;
   if fviewdist < MINVIEWDIST then
@@ -215,7 +211,6 @@ begin
     ScriptRadioGroup.ItemIndex := opt_spritescript;
 
   GenerateVoxelCheckBox.Checked := opt_dospritevox = 1;
-  GenerateModelCheckBox.Checked := opt_dospritemodel = 1;
 
   voxRadioButton64x64.Checked := opt_spritevox = 64;
   voxRadioButton128x128.Checked := opt_spritevox = 128;
@@ -227,7 +222,7 @@ end;
 procedure TExportSpriteForm.FormDestroy(Sender: TObject);
 begin
   device_destroy(@device);
-  rocktex.Free;
+  modeltex.Free;
   buffer.Free;
 
   opt_viewdist := Round(fviewdist * OPT_TO_FLOAT);
@@ -235,10 +230,6 @@ begin
   opt_theta2 := Round(ftheta2 * OPT_TO_FLOAT);
   opt_spritepal := PatchRadioGroup.ItemIndex;
   opt_spritescript := ScriptRadioGroup.ItemIndex;
-  if GenerateModelCheckBox.Checked then
-    opt_dospritemodel := 1
-  else
-    opt_dospritemodel := 0;
   if GenerateVoxelCheckBox.Checked then
     opt_dospritevox := 1
   else
@@ -255,7 +246,6 @@ procedure TExportSpriteForm.FileNameEditChange(Sender: TObject);
 begin
   if Trim(FileNameEdit.Text) = '' then
     Button1.Enabled := False;
-  ModelGroupBox.Visible := (ScriptRadioGroup.ItemIndex = 0) or (not IsWAD and (ScriptRadioGroup.ItemIndex = 1));
 end;
 
 procedure TExportSpriteForm.RenderFaces(const mVertCount, mFaceCount: integer;
@@ -299,7 +289,7 @@ begin
   device.transform.world := c;
   transform_update(@device.transform);
   device.render_state := RENDER_STATE_TEXTURE_SOLID;
-  RenderFaces(rock.mVertCount, rock.mFaceCount, rock.mVert, rock.mFace, rocktex);
+  RenderFaces(model.mVertCount, model.mFaceCount, model.mVert, model.mFace, modeltex);
 
   buffer.Canvas.StretchDraw(Rect(0, 0, buffer.Width, buffer.Height), device.bframebuffer);
   needs3dupdate := False;
@@ -430,7 +420,6 @@ end;
 procedure TExportSpriteForm.Timer1Timer(Sender: TObject);
 begin
   Button1.Enabled := CheckOKtoGO;
-  ModelGroupBox.Visible := (ScriptRadioGroup.ItemIndex = 0) or (not IsWAD and (ScriptRadioGroup.ItemIndex = 1));
 end;
 
 procedure TExportSpriteForm.CheckNumericEdit(Sender: TObject;
@@ -447,7 +436,6 @@ procedure TExportSpriteForm.ScriptRadioGroupClick(Sender: TObject);
 begin
   ScriptParametersGroupBox.Visible := ScriptRadioGroup.ItemIndex <> 2;
   VoxelGroupBox.Visible := ScriptRadioGroup.ItemIndex = 0;
-  ModelGroupBox.Visible := (ScriptRadioGroup.ItemIndex = 0) or (not IsWAD and (ScriptRadioGroup.ItemIndex = 0));
 end;
 
 procedure TExportSpriteForm.PrepareTextures;
@@ -457,11 +445,11 @@ var
   ln: PIUINT32Array;
   r, g, b: byte;
 begin
-  rocktex.PixelFormat := pf32bit;
-  for y := 0 to rocktex.Height - 1 do
+  modeltex.PixelFormat := pf32bit;
+  for y := 0 to modeltex.Height - 1 do
   begin
-    ln := rocktex.ScanLine[y];
-    for x := 0 to rocktex.Width - 1 do
+    ln := modeltex.ScanLine[y];
+    for x := 0 to modeltex.Width - 1 do
     begin
       r := GetRValue(ln[x]);
       g := GetGValue(ln[x]);
@@ -497,8 +485,8 @@ var
   definitionsize: integer;
   maxradius: single;
 begin
-  maxscoord := rock.maxcoord;
-  maxradius := rock.maxdiameter / 2;
+  maxscoord := model.maxcoord;
+  maxradius := model.maxdiameter / 2;
 
   w := StrToIntDef(RadiusEdit.Text, 64);
   h := StrToIntDef(HeightEdit.Text, 128);
@@ -535,7 +523,7 @@ var
   w, h: integer;
   definitionsize: integer;
 begin
-  maxcoord := rock.maxcoord;
+  maxcoord := model.maxcoord;
 
   w := StrToIntDef(RadiusEdit.Text, 64);
   h := StrToIntDef(HeightEdit.Text, 128);
@@ -558,7 +546,6 @@ var
   b: TBitmap;
   vox: voxelbuffer_p;
   voxsize: integer;
-  modsize: integer;
   w, h: integer;
   pk3entry: string;
   modeldef: string;
@@ -568,14 +555,6 @@ begin
   try
     script := TStringList.Create;
     try
-
-      ms := TMemoryStream.Create;
-      try
-        PT_SavePropertiesBinary(rock.mProperties, ms);
-        wad.AddData('DOOMROCK', ms.Memory, ms.Size);
-      finally
-        ms.Free;
-      end;
 
       if ScriptRadioGroup.ItemIndex <> 2 then
       begin
@@ -658,7 +637,7 @@ begin
             voxsize := 256;
         end;
 
-        DT_CreateVoxelFromRock(rock, vox, voxsize, rocktex);
+        DT_CreateVoxelFromModel(model, vox, voxsize, modeltex);
 
         if ScriptRadioGroup.ItemIndex = 0 then
         begin
@@ -689,47 +668,6 @@ begin
 
         FreeMem(vox, SizeOf(voxelbuffer_t));
       end;
-      if GenerateModelCheckBox.Checked then
-      begin
-        if ScriptRadioGroup.ItemIndex = 0 then
-        begin
-          wad.AddString(PrefixEdit.Text + 'DDM', GetDDModelDeclaration(rock));
-          ms := TMemoryStream.Create;
-          rocktex.PixelFormat := pf24bit;
-          rocktex.SaveToStream(ms);
-          rocktex.PixelFormat := pf32bit;
-          wad.AddData(PrefixEdit.Text + 'BMP', ms.Memory, ms.Size);
-          ms.Free;
-          pk3entry := pk3entry + PrefixEdit.Text + 'DDM=' + PrefixEdit.Text + '.DDMODEL'#13#10;
-          pk3entry := pk3entry + PrefixEdit.Text + 'BMP=' + PrefixEdit.Text + '_MODEL.BMP'#13#10;
-
-          w := 2 * StrToIntDef(RadiusEdit.Text, 64);
-          h := StrToIntDef(HeightEdit.Text, 128);
-          if w > h then
-            modsize := w
-          else
-            modsize := h;
-
-          modeldef := '';
-          modeldef := modeldef + 'modeldef "' + PrefixEdit.Text + '.DDMODEL' +'"'#13#10;
-          modeldef := modeldef + '{'#13#10;
-          modeldef := modeldef + '  xoffset 0.0'#13#10;
-          modeldef := modeldef + '  yoffset 0.0'#13#10;
-          modeldef := modeldef + '  zoffset 0.0'#13#10;
-          modeldef := modeldef + '  xscale ' + IntToStr(modsize) + #13#10;
-          modeldef := modeldef + '  yscale ' + IntToStr(modsize) + #13#10;
-          modeldef := modeldef + '  zscale ' + IntToStr(modsize) + #13#10;
-          modeldef := modeldef + '}'#13#10;
-          modeldef := modeldef + #13#10;
-          modeldef := modeldef + 'state S_' + ActorNameEdit.Text + '0'#13#10;
-          modeldef := modeldef + '{'#13#10;
-          modeldef := modeldef + '  model "' + PrefixEdit.Text + '.DDMODEL' + '"'#13#10;
-          modeldef := modeldef + '  texture "' + PrefixEdit.Text + '_MODEL.BMP' + '"'#13#10;
-          modeldef := modeldef + '  frame 0'#13#10;
-          modeldef := modeldef + '}'#13#10;
-          wad.AddString('MODELDEF', modeldef);
-        end;
-      end;
       if pk3entry <> '' then
        wad.AddString('PK3ENTRY', pk3entry);
     end;
@@ -754,7 +692,6 @@ var
   b: TBitmap;
   vox: voxelbuffer_p;
   voxsize: integer;
-  modsize: integer;
   w, h: integer;
   modeldef: string;
   png: TPngObject;
@@ -762,14 +699,6 @@ begin
   Screen.Cursor := crHourGlass;
   pk3 := TPK3Writer.Create;
   try
-    ms := TMemoryStream.Create;
-    try
-      PT_SavePropertiesBinary(rock.mProperties, ms);
-      AddBinaryDataToPK3(pk3, PrefixEdit.Text + '.rock', ms.Memory, ms.Size);
-    finally
-      ms.Free;
-    end;
-
     script := TStringList.Create;
     try
       if ScriptRadioGroup.ItemIndex <> 2 then
@@ -864,83 +793,13 @@ begin
             voxsize := 256;
         end;
 
-        DT_CreateVoxelFromRock(rock, vox, voxsize, rocktex);
+        DT_CreateVoxelFromModel(model, vox, voxsize, modeltex);
 
         VXE_ExportVoxelToDDVOX(vox, voxsize, 'vxtmp');
         AddFileToPK3(pk3, 'VOXELS\' + PrefixEdit.Text + '.ddvox', 'vxtmp');
         DeleteFile('vxtmp');
         AddStringDataToPK3(pk3, 'VOXELS\VOXELDEF.txt', 'voxeldef ' + PrefixEdit.Text + '.ddvox ' + Format('scale %1.5f', [voxelscale]) + ' replace sprite ' + PrefixEdit.Text);
         FreeMem(vox, SizeOf(voxelbuffer_t));
-      end;
-      if GenerateModelCheckBox.Checked then
-      begin
-        png := TPngObject.Create;
-        png.Assign(rocktex);
-        ms := TMemoryStream.Create;
-        png.SaveToStream(ms);
-        png.Free;
-        AddBinaryDataToPK3(pk3, 'MODELS\' + PrefixEdit.Text + '_MODEL.PNG', ms.Memory, ms.Size);
-        ms.Free;
-
-        AddStringDataToPK3(pk3, 'MODELS\' + PrefixEdit.Text + '.DDMODEL', GetDDModelDeclaration(rock));
-
-        w := 2 * StrToIntDef(RadiusEdit.Text, 64);
-        h := StrToIntDef(HeightEdit.Text, 128);
-        if w > h then
-          modsize := w
-        else
-          modsize := h;
-
-        modeldef := '';
-        modeldef := modeldef + 'modeldef "' + PrefixEdit.Text + '.DDMODEL' + '"'#13#10;
-        modeldef := modeldef + '{'#13#10;
-        modeldef := modeldef + '  xoffset 0.0'#13#10;
-        modeldef := modeldef + '  yoffset 0.0'#13#10;
-        modeldef := modeldef + '  zoffset 0.0'#13#10;
-        modeldef := modeldef + '  xscale ' + IntToStr(modsize) + #13#10;
-        modeldef := modeldef + '  yscale ' + IntToStr(modsize) + #13#10;
-        modeldef := modeldef + '  zscale ' + IntToStr(modsize) + #13#10;
-        modeldef := modeldef + '}'#13#10;
-        modeldef := modeldef + #13#10;
-        modeldef := modeldef + 'state S_' + ActorNameEdit.Text + '0'#13#10;
-        modeldef := modeldef + '{'#13#10;
-        modeldef := modeldef + '  model "' + PrefixEdit.Text + '.DDMODEL' + '"'#13#10;
-        modeldef := modeldef + '  texture "' + PrefixEdit.Text + '_MODEL.PNG' + '"'#13#10;
-        modeldef := modeldef + '  frame 0'#13#10;
-        modeldef := modeldef + '}'#13#10;
-        AddStringDataToPK3(pk3, 'MODELS\MODELDEF.txt', modeldef);
-      end;
-    end;
-
-    if ScriptRadioGroup.ItemIndex = 1 then
-    begin
-      if GenerateModelCheckBox.Checked then
-      begin
-        png := TPngObject.Create;
-        png.Assign(rocktex);
-        ms := TMemoryStream.Create;
-        png.SaveToStream(ms);
-        png.Free;
-        AddBinaryDataToPK3(pk3, 'MODELS\' + ActorNameEdit.Text + '\' + PrefixEdit.Text + '_MODEL.PNG', ms.Memory, ms.Size);
-        ms.Free;
-
-        ms := TMemoryStream.Create;
-        SaveRockToMD2Stream(rock, ms, PrefixEdit.Text);
-        AddBinaryDataToPK3(pk3, 'MODELS\' + ActorNameEdit.Text + '\' + PrefixEdit.Text + '.MD2', ms.Memory, ms.Size);
-        ms.Free;
-
-        modeldef := '';
-        modeldef := modeldef + 'model ' + ActorNameEdit.Text  + #13#10;
-        modeldef := modeldef + '{'#13#10;
-        modeldef := modeldef + '  Path "MODELS/' + ActorNameEdit.Text + '"'#13#10;
-        modeldef := modeldef + '  Model 0 "' + PrefixEdit.Text + '.MD2"'#13#10;
-        modeldef := modeldef + '  Skin 0 "' + PrefixEdit.Text + '_MODEL.PNG"'#13#10;
-        modeldef := modeldef + '  Scale ' + Format('%1.5f %1.5f %1.5f', [md2scale, md2scale, md2scale]) + #13#10;
-        stmp := PrefixEdit.Text;
-        modeldef := modeldef + '  Frame ' + stmp[1] + stmp[2] + stmp[3] + stmp[4] + ' ' + stmp[5] + ' 0 "default0"'#13#10;
-        modeldef := modeldef + '}'#13#10;
-        modeldef := modeldef + #13#10;
-        AddStringDataToPK3(pk3, 'MODELDEF.txt', modeldef);
       end;
     end;
 

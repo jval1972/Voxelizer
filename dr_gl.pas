@@ -44,7 +44,7 @@ procedure ResetCamera;
 procedure glBeginScene(const Width, Height: integer);
 procedure glEndScene(dc: HDC);
 procedure glRenderEnviroment;
-procedure glRenderRock(const t: rock_t);
+procedure glRenderModel(const t: model_t);
 
 type
   TCDCamera = record
@@ -59,7 +59,7 @@ var
   pt_rendredtriangles: integer = 0;
 
 var
-  rocktexture: TGLuint = 0;
+  modeltexture: TGLuint = 0;
 
 function gld_CreateTexture(const pic: TPicture; const transparent: boolean): TGLUint;
 
@@ -269,12 +269,12 @@ begin
   pt_rendredtriangles := pt_rendredtriangles + mFaceCount;
 end;
 
-procedure glRenderRock(const t: rock_t);
+procedure glRenderModel(const t: model_t);
 begin
   if opt_renderwireframe then
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE )
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE )
   else
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL );
 
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
@@ -283,7 +283,7 @@ begin
   glDisable(GL_BLEND);
   glDisable(GL_ALPHA_TEST);
 
-  glBindTexture(GL_TEXTURE_2D, rocktexture);
+  glBindTexture(GL_TEXTURE_2D, modeltexture);
 
   pt_rendredtriangles := 0;
   glRenderFaces(t.mVertCount, t.mFaceCount, t.mVert, t.mFace);

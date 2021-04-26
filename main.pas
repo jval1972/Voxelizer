@@ -22,7 +22,7 @@
 //  Main Form
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/doom-model/
 //------------------------------------------------------------------------------
 
 unit main;
@@ -32,7 +32,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, xTGA, jpeg, zBitmap, ComCtrls, ExtCtrls, Buttons, Menus,
-  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, models, dr_undo,
+  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, models, 
   dr_filemenuhistory, dr_slider;
 
 type
@@ -42,16 +42,12 @@ type
     File1: TMenuItem;
     Open1: TMenuItem;
     Open2: TMenuItem;
-    Save1: TMenuItem;
-    Savesa1: TMenuItem;
     N2: TMenuItem;
     Exit1: TMenuItem;
     Help1: TMenuItem;
     About1: TMenuItem;
     ApplicationEvents1: TApplicationEvents;
     OpenDialog1: TOpenDialog;
-    Undo1: TMenuItem;
-    Redo1: TMenuItem;
     OpenPictureDialog1: TOpenPictureDialog;
     Timer1: TTimer;
     StatusBar1: TStatusBar;
@@ -59,10 +55,6 @@ type
     SavePictureDialog1: TSavePictureDialog;
     N4: TMenuItem;
     Export1: TMenuItem;
-    ExportObjModel1: TMenuItem;
-    SaveDialog1: TSaveDialog;
-    N5: TMenuItem;
-    N8: TMenuItem;
     Copy1: TMenuItem;
     OpenPictureDialog2: TOpenPictureDialog;
     ToolBar1: TToolBar;
@@ -70,14 +62,11 @@ type
     OpenGLPanel: TPanel;
     Splitter1: TSplitter;
     SaveAsButton1: TSpeedButton;
-    SaveButton1: TSpeedButton;
     OpenButton1: TSpeedButton;
     NewButton1: TSpeedButton;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
-    UndoButton1: TSpeedButton;
-    RedoButton1: TSpeedButton;
     ToolButton4: TToolButton;
     AboutButton1: TSpeedButton;
     N7: TMenuItem;
@@ -94,13 +83,9 @@ type
     ExportScreenshot1: TMenuItem;
     Wireframe1: TMenuItem;
     Renderenviroment1: TMenuItem;
-    SaveDialog2: TSaveDialog;
     Sprite1: TMenuItem;
     N1: TMenuItem;
     Voxel1: TMenuItem;
-    SaveDialog3: TSaveDialog;
-    N3: TMenuItem;
-    MD2model1: TMenuItem;
     Panel1: TPanel;
     ExportSpriteSpeedButton: TSpeedButton;
     ExportVoxelSpeedButton: TSpeedButton;
@@ -113,16 +98,13 @@ type
     Label1: TLabel;
     SeedSpeedButton1: TSpeedButton;
     SeedSpeedButton2: TSpeedButton;
-    SeedEdit: TEdit;
-    RockImage: TImage;
+    FrameEdit: TEdit;
+    ModelImage: TImage;
     LoadTrunkBitBtn1: TBitBtn;
     procedure FormCreate(Sender: TObject);
-    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure NewButton1Click(Sender: TObject);
-    procedure SaveButton1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure AboutButton1Click(Sender: TObject);
-    procedure SaveAsButton1Click(Sender: TObject);
     procedure ExitButton1Click(Sender: TObject);
     procedure OpenButton1Click(Sender: TObject);
     procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
@@ -138,53 +120,40 @@ type
     procedure OpenGLPanelMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure OpenGLPanelDblClick(Sender: TObject);
-    procedure Edit1Click(Sender: TObject);
-    procedure Undo1Click(Sender: TObject);
-    procedure Redo1Click(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure File1Click(Sender: TObject);
     procedure Copy1Click(Sender: TObject);
     procedure Options1Click(Sender: TObject);
     procedure Wireframe1Click(Sender: TObject);
-    procedure RockImageDblClick(Sender: TObject);
+    procedure ModelImageDblClick(Sender: TObject);
     procedure Renderenviroment1Click(Sender: TObject);
     procedure SeedSpeedButton1Click(Sender: TObject);
     procedure SeedSpeedButton2Click(Sender: TObject);
-    procedure SeedEditKeyPress(Sender: TObject; var Key: Char);
-    procedure SeedEditChange(Sender: TObject);
-    procedure ExportObjModel1Click(Sender: TObject);
+    procedure FrameEditKeyPress(Sender: TObject; var Key: Char);
+    procedure FrameEditChange(Sender: TObject);
     procedure ExportScreenshot1Click(Sender: TObject);
     procedure Sprite1Click(Sender: TObject);
     procedure Voxel1Click(Sender: TObject);
-    procedure MD2ModelExportClick(Sender: TObject);
     procedure ApplicationEvents1Activate(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
-    savepicturedata: boolean;
     changed: Boolean;
-    rock: rock_t;
+    model: model_t;
     rc: HGLRC;   // Rendering Context
     dc: HDC;     // Device Context
     glpanx, glpany: integer;
     glmousedown: integer;
-    undoManager: TUndoRedoManager;
     filemenuhistory: TFileMenuHistory;
     glneedsupdate: boolean;
     needsrecalc: boolean;
     closing: boolean;
     procedure Idle(Sender: TObject; var Done: Boolean);
-    function CheckCanClose: boolean;
     procedure DoNewRock(const seed: integer);
-    procedure DoSaveRock(const fname: string);
     function DoLoadRock(const fname: string): boolean;
     procedure SetFileName(const fname: string);
-    procedure DoSaveRockBinaryUndo(s: TStream);
-    procedure DoLoadRockBinaryUndo(s: TStream);
-    procedure SaveUndo;
     procedure UpdateStausbar;
-    procedure UpdateEnable;
     procedure OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
     procedure DoRenderGL;
     procedure Get3dPreviewBitmap(const b: TBitmap);
@@ -207,8 +176,6 @@ uses
   dr_utils,
   dr_voxels,
   dr_palettes,
-  dr_md2,
-  procrock_helpers,
   frm_exportsprite,
   frm_exportvoxel;
 
@@ -232,13 +199,7 @@ begin
 
   closing := False;
 
-  savepicturedata := False;
-
   PageControl1.ActivePageIndex := 0;
-
-  undoManager := TUndoRedoManager.Create;
-  undoManager.OnLoadFromStream := DoLoadRockBinaryUndo;
-  undoManager.OnSaveToStream := DoSaveRockBinaryUndo;
 
   filemenuhistory := TFileMenuHistory.Create(self);
   filemenuhistory.MenuItem0 := HistoryItem0;
@@ -269,8 +230,6 @@ begin
   begin
     if DirectoryExists(sdir) then
     begin
-      SaveDialog1.InitialDir := sdir;
-      SaveDialog2.InitialDir := sdir;
       SavePictureDialog1.InitialDir := sdir;
       OpenDialog1.InitialDir := sdir;
     end;
@@ -282,7 +241,7 @@ begin
       OpenPictureDialog2.InitialDir := sdir + 'Data\Twig';
   end;
 
-  rock := rock_t.Create;
+  model := model_t.Create;
 
   Scaled := False;
 
@@ -322,7 +281,7 @@ begin
 
   OpenGLPanelResize(sender);    // sets up the perspective
 
-  rocktexture := gld_CreateTexture(RockImage.Picture, False);
+  modeltexture := gld_CreateTexture(ModelImage.Picture, False);
 
   glneedsupdate := True;
 
@@ -342,50 +301,14 @@ begin
     RockToControls;
     glneedsupdate := True;
     needsrecalc := True;
-    undoManager.Clear;
   end;
 
   // when the app has spare time, render the GL scene
   Application.OnIdle := Idle;
 end;
 
-procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-begin
-  CanClose := CheckCanClose;
-end;
-
-function TForm1.CheckCanClose: boolean;
-var
-  ret: integer;
-begin
-  if changed then
-  begin
-    ret := MessageBox(Handle, 'Do you want to save changes?', PChar(rsTitle), MB_YESNOCANCEL or MB_ICONQUESTION or MB_APPLMODAL);
-    if ret = IDCANCEL	then
-    begin
-      Result := False;
-      exit;
-    end;
-    if ret = IDNO	then
-    begin
-      Result := True;
-      exit;
-    end;
-    if ret = IDYES then
-    begin
-      SaveButton1Click(self);
-      Result := not changed;
-      exit;
-    end;
-  end;
-  Result := True;
-end;
-
 procedure TForm1.NewButton1Click(Sender: TObject);
 begin
-  if not CheckCanClose then
-    Exit;
-
   DoNewRock(random($10000));
   ResetCamera;
 end;
@@ -394,11 +317,10 @@ procedure TForm1.DoNewRock(const seed: integer);
 begin
   SetFileName('');
   changed := False;
-  rock.mProperties.DefaultValues(seed);
+  model.init;
   RockToControls;
   glneedsupdate := True;
   needsrecalc := True;
-  undoManager.Clear;
 end;
 
 procedure TForm1.SetFileName(const fname: string);
@@ -409,67 +331,10 @@ begin
     Caption := Caption + ' - ' + MkShortName(ffilename);
 end;
 
-procedure TForm1.SaveButton1Click(Sender: TObject);
-begin
-  if ffilename = '' then
-  begin
-    if SaveDialog1.Execute then
-    begin
-      ffilename := SaveDialog1.FileName;
-      filemenuhistory.AddPath(ffilename);
-    end
-    else
-    begin
-      Beep;
-      Exit;
-    end;
-  end;
-  BackupFile(ffilename);
-  DoSaveRock(ffilename);
-end;
-
-procedure TForm1.DoSaveRock(const fname: string);
-var
-  fs: TFileStream;
-  m: TMemoryStream;
-  sz: integer;
-  z: TZBitmap;
-begin
-  SetFileName(fname);
-
-  fs := TFileStream.Create(fname, fmCreate);
-  try
-    PT_SavePropertiesBinary(rock.mProperties, fs);
-
-    if savepicturedata then
-    begin
-      m := TMemoryStream.Create;
-      z := TZBitmap.Create;
-      z.Assign(RockImage.Picture.Bitmap);
-      z.PixelFormat := pf24bit;
-      z.SaveToStream(m);
-      z.Free;
-      sz := m.size;
-      fs.Write(sz, SizeOf(Integer));
-      m.Position := 0;
-      fs.CopyFrom(m, sz);
-      m.Free;
-    end;
-  finally
-    fs.Free;
-  end;
-
-  changed := False;
-end;
-
 function TForm1.DoLoadRock(const fname: string): boolean;
 var
   fs: TFileStream;
   s: string;
-  sz: integer;
-  m: TMemoryStream;
-  z: TZBitmap;
-  oldp: integer;
 begin
   if not FileExists(fname) then
   begin
@@ -479,45 +344,13 @@ begin
     exit;
   end;
 
-  undoManager.Clear;
-
   fs := TFileStream.Create(fname, fmOpenRead or fmShareDenyWrite);
   try
-    PT_LoadPropertiesBinary(rock.mProperties, fs);
-
-    if savepicturedata then
-    begin
-      oldp := fs.Position;
-      if oldp < fs.Size then
-      begin
-        fs.Read(sz, SizeOf(Integer));
-        if sz > 0 then
-        begin
-          m := TMemoryStream.Create;
-          m.CopyFrom(fs, sz);
-          m.Position := 0;
-          z := TZBitmap.Create;
-          z.LoadFromStream(m);
-          z.PixelFormat := pf32bit;
-          RockImage.Picture.Bitmap.Assign(z);
-          z.Free;
-          m.Free;
-        end;
-        fs.Position := oldp + sz + SizeOf(Integer);
-      end;
-    end;
-
+    // Add load model code
   finally
     fs.Free;
   end;
 
-  if savepicturedata then
-  begin
-    // Recreate OpenGL Textures
-    glDeleteTextures(1, @rocktexture);
-    rocktexture := gld_CreateTexture(RockImage.Picture, False);
-  end;
-  
   RockToControls;
   filemenuhistory.AddPath(fname);
   SetFileName(fname);
@@ -530,11 +363,11 @@ procedure TForm1.FormDestroy(Sender: TObject);
 begin
   closing := True;
   Timer1.Enabled := False;
-  undoManager.Free;
+
   wglMakeCurrent(0, 0);
   wglDeleteContext(rc);
 
-  glDeleteTextures(1, @rocktexture);
+  glDeleteTextures(1, @modeltexture);
 
   stringtobigstring(filemenuhistory.PathStringIdx(0), @opt_filemenuhistory0);
   stringtobigstring(filemenuhistory.PathStringIdx(1), @opt_filemenuhistory1);
@@ -550,7 +383,7 @@ begin
 
   filemenuhistory.Free;
 
-  rock.Free;
+  model.Free;
 end;
 
 procedure TForm1.AboutButton1Click(Sender: TObject);
@@ -566,16 +399,6 @@ begin
     MB_OK or MB_ICONINFORMATION or MB_APPLMODAL);
 end;
 
-procedure TForm1.SaveAsButton1Click(Sender: TObject);
-begin
-  if SaveDialog1.Execute then
-  begin
-    filemenuhistory.AddPath(SaveDialog1.FileName);
-    BackupFile(SaveDialog1.FileName);
-    DoSaveRock(SaveDialog1.FileName);
-  end;
-end;
-
 procedure TForm1.ExitButton1Click(Sender: TObject);
 begin
   Close;
@@ -583,9 +406,6 @@ end;
 
 procedure TForm1.OpenButton1Click(Sender: TObject);
 begin
-  if not CheckCanClose then
-    Exit;
-
   if OpenDialog1.Execute then
   begin
     DoLoadRock(OpenDialog1.FileName);
@@ -658,7 +478,6 @@ begin
     Exit;
 
   Sleep(1);
-  UpdateEnable;
 
   Done := False;
 
@@ -742,50 +561,6 @@ begin
   glneedsupdate := True;
 end;
 
-procedure TForm1.Edit1Click(Sender: TObject);
-begin
-  Undo1.Enabled := undoManager.CanUndo;
-  Redo1.Enabled := undoManager.CanRedo;
-end;
-
-procedure TForm1.Undo1Click(Sender: TObject);
-begin
-  if undoManager.CanUndo then
-  begin
-    undoManager.Undo;
-    glneedsupdate := True;
-    needsrecalc := True;
-  end;
-end;
-
-procedure TForm1.Redo1Click(Sender: TObject);
-begin
-  if undoManager.CanRedo then
-  begin
-    undoManager.Redo;
-    glneedsupdate := True;
-    needsrecalc := True;
-  end;
-end;
-
-procedure TForm1.DoSaveRockBinaryUndo(s: TStream);
-begin
-  PT_SavePropertiesBinary(rock.mProperties, s);
-end;
-
-procedure TForm1.DoLoadRockBinaryUndo(s: TStream);
-begin
-  PT_LoadPropertiesBinary(rock.mProperties, s);
-  RockToControls;
-  glneedsupdate := True;
-  needsrecalc := True;
-end;
-
-procedure TForm1.SaveUndo;
-begin
-  undoManager.SaveUndo;
-end;
-
 procedure TForm1.FormPaint(Sender: TObject);
 begin
   glneedsupdate := True;
@@ -802,19 +577,8 @@ begin
   StatusBar1.Panels[1].Text := Format('Rendered triangles = %d', [pt_rendredtriangles]);
 end;
 
-procedure TForm1.UpdateEnable;
-begin
-  Undo1.Enabled := undoManager.CanUndo;
-  Redo1.Enabled := undoManager.CanRedo;
-  UndoButton1.Enabled := undoManager.CanUndo;
-  RedoButton1.Enabled := undoManager.CanRedo;
-end;
-
 procedure TForm1.OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
 begin
-  if not CheckCanClose then
-    Exit;
-
   DoLoadRock(fname);
   ResetCamera;
 end;
@@ -832,11 +596,11 @@ begin
     try
       if needsrecalc then
       begin
-        rock.generate;
+        // Add code to change frame
         needsrecalc := False;
       end;
       glRenderEnviroment;
-      glRenderRock(rock);
+      glRenderModel(model);
     finally
       glEndScene(dc);
     end;
@@ -902,13 +666,13 @@ begin
   glneedsupdate := True;
 end;
 
-procedure TForm1.RockImageDblClick(Sender: TObject);
+procedure TForm1.ModelImageDblClick(Sender: TObject);
 begin
   if OpenPictureDialog1.Execute then
   begin
-    RockImage.Picture.LoadFromFile(OpenPictureDialog1.FileName);
-    glDeleteTextures(1, @rocktexture);
-    rocktexture := gld_CreateTexture(RockImage.Picture, False);
+    ModelImage.Picture.LoadFromFile(OpenPictureDialog1.FileName);
+    glDeleteTextures(1, @modeltexture);
+    modeltexture := gld_CreateTexture(ModelImage.Picture, False);
     changed := True;
   end;
 end;
@@ -923,22 +687,22 @@ procedure TForm1.SeedSpeedButton1Click(Sender: TObject);
 var
   x: integer;
 begin
-  x := StrToIntDef(SeedEdit.Text, -1);
+  x := StrToIntDef(FrameEdit.Text, -1);
   if x >= 0 then
     if x < MAXINT then
-      SeedEdit.Text := IntToStr(x + 1);
+      FrameEdit.Text := IntToStr(x + 1);
 end;
 
 procedure TForm1.SeedSpeedButton2Click(Sender: TObject);
 var
   x: integer;
 begin
-  x := StrToIntDef(SeedEdit.Text, -1);
+  x := StrToIntDef(FrameEdit.Text, -1);
   if x > 0 then
-    SeedEdit.Text := IntToStr(x - 1);
+    FrameEdit.Text := IntToStr(x - 1);
 end;
 
-procedure TForm1.SeedEditKeyPress(Sender: TObject; var Key: Char);
+procedure TForm1.FrameEditKeyPress(Sender: TObject; var Key: Char);
 begin
   if not (Key in [#8, '0'..'9']) then
     Key := #0;
@@ -957,7 +721,7 @@ begin
   if closing then
     Exit;
 
-  SeedEdit.Text := IntToStr(rock.mProperties.mSeed);
+  FrameEdit.Text := IntToStr(model.mFrame);
 
   RockToSliders;
   SlidersToLabels;
@@ -968,37 +732,18 @@ begin
   if closing then
     Exit;
 
-  SaveUndo;
   SlidersToLabels;
-  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 661);
+  model.mFrame := StrToIntDef(FrameEdit.Text, 661);
 
   needsrecalc := True;
   changed := True;
 end;
 
-procedure TForm1.SeedEditChange(Sender: TObject);
+procedure TForm1.FrameEditChange(Sender: TObject);
 begin
-  SaveUndo;
-  rock.mProperties.mSeed := StrToIntDef(SeedEdit.Text, 661);
+  model.mFrame := StrToIntDef(FrameEdit.Text, 661);
   needsrecalc := True;
   changed := True;
-end;
-
-procedure TForm1.ExportObjModel1Click(Sender: TObject);
-var
-  fs: TFileStream;
-begin
-  if SaveDialog2.Execute then
-  begin
-    BackupFile(SaveDialog2.FileName);
-    fs := TFileStream.Create(SaveDialog2.FileName, fmCreate);
-    try
-
-      PT_SaveRockToObj(rock, fs);
-    finally
-      fs.Free;
-    end;
-  end;
 end;
 
 procedure TForm1.ExportScreenshot1Click(Sender: TObject);
@@ -1026,8 +771,8 @@ var
 begin
   f := TExportSpriteForm.Create(nil);
   try
-    f.rock := rock;
-    f.rocktex.Canvas.StretchDraw(Rect(0, 0, f.rocktex.Width, f.rocktex.Height), RockImage.Picture.Graphic);
+    f.model := model;
+    f.modeltex.Canvas.StretchDraw(Rect(0, 0, f.modeltex.Width, f.modeltex.Height), ModelImage.Picture.Graphic);
     f.PrepareTextures;
     f.ShowModal;
     if f.ModalResult = mrOK then
@@ -1043,7 +788,7 @@ var
   ename: string;
   vox_typ: string;
   sz: integer;
-  rocktex: TBitmap;
+  modeltex: TBitmap;
   f: TExportVoxelForm;
 begin
   GetMem(buf, SizeOf(voxelbuffer_t));
@@ -1051,12 +796,12 @@ begin
   try
     f := TExportVoxelForm.Create(nil);
     try
-      rocktex := TBitmap.Create;
-      rocktex.Width := 256;
-      rocktex.Height := 256;
-      rocktex.PixelFormat := pf32bit;
-      rocktex.Canvas.StretchDraw(Rect(0, 0, rocktex.Width, rocktex.Height), RockImage.Picture.Graphic);
-      f.SetRockVoxelParams(rock, buf, rocktex);
+      modeltex := TBitmap.Create;
+      modeltex.Width := 256;
+      modeltex.Height := 256;
+      modeltex.PixelFormat := pf32bit;
+      modeltex.Canvas.StretchDraw(Rect(0, 0, modeltex.Width, modeltex.Height), ModelImage.Picture.Graphic);
+      f.SetModelVoxelParams(model, buf, modeltex);
       f.ShowModal;
       if f.ModalResult = mrOK then
       begin
@@ -1077,7 +822,7 @@ begin
         else
           VXE_ExportVoxelToDDVOX(buf, sz, ename);
       end;
-      rocktex.Free;
+      modeltex.Free;
     finally
       f.Free;
     end;
@@ -1085,18 +830,6 @@ begin
     Screen.Cursor := crDefault;
   end;
   FreeMem(buf, SizeOf(voxelbuffer_t));
-end;
-
-procedure TForm1.MD2ModelExportClick(Sender: TObject);
-var
-  fs: TFileStream;
-begin
-  if SaveDialog3.Execute then
-  begin
-    fs := TFileStream.Create(SaveDialog3.FileName, fmCreate);
-    SaveRockToMD2Stream(rock, fs, 'rock');
-    fs.Free;
-  end;
 end;
 
 procedure TForm1.ApplicationEvents1Activate(Sender: TObject);

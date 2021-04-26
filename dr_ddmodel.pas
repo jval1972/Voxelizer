@@ -22,7 +22,7 @@
 //  DDModel export
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/doom-model/
 //------------------------------------------------------------------------------
 
 unit dr_ddmodel;
@@ -32,11 +32,11 @@ interface
 uses
   Windows, Classes, SysUtils, models;
 
-function GetDDModelDeclaration(const rock: rock_t): string;
+function GetDDModelDeclaration(const model: model_t): string;
 
 implementation
 
-function GetDDModelDeclaration(const rock: rock_t): string;
+function GetDDModelDeclaration(const model: model_t): string;
 var
   ret: string;
   minx, maxx, miny, maxy, minz, maxz: single;
@@ -76,20 +76,20 @@ begin
   maxy := -100000.0;
   minz := 100000.0;
   maxz := -100000.0;
-  for i := 0 to rock.mVertCount - 1 do
+  for i := 0 to model.mVertCount - 1 do
   begin
-    if rock.mVert[i].x < minx then
-      minx := rock.mVert[i].x;
-    if rock.mVert[i].x > maxx then
-      maxx := rock.mVert[i].x;
-    if rock.mVert[i].y < miny then
-      miny := rock.mVert[i].y;
-    if rock.mVert[i].y > maxy then
-      maxy := rock.mVert[i].y;
-    if rock.mVert[i].z < minz then
-      minz := rock.mVert[i].z;
-    if rock.mVert[i].z > maxz then
-      maxz := rock.mVert[i].z;
+    if model.mVert[i].x < minx then
+      minx := model.mVert[i].x;
+    if model.mVert[i].x > maxx then
+      maxx := model.mVert[i].x;
+    if model.mVert[i].y < miny then
+      miny := model.mVert[i].y;
+    if model.mVert[i].y > maxy then
+      maxy := model.mVert[i].y;
+    if model.mVert[i].z < minz then
+      minz := model.mVert[i].z;
+    if model.mVert[i].z > maxz then
+      maxz := model.mVert[i].z;
   end;
   dx := maxx - minx;
   dy := maxy - miny;
@@ -106,7 +106,7 @@ begin
   AddLine('model model1;');
   AddLine('begin');
   AddLine('  SetFrame(0);');
-  RenderFaces(rock.mVertCount, rock.mFaceCount, rock.mVert, rock.mFace);
+  RenderFaces(model.mVertCount, model.mFaceCount, model.mVert, model.mFace);
   AddLine('end.');
   Result := ret;
 end;
