@@ -62,7 +62,7 @@ uses
 
 begin
   Application.Initialize;
-  Application.Title := 'DOOMROCK Sprite Generator';
+  Application.Title := 'Voxelizer';
   Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.
