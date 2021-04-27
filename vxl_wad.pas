@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -22,10 +22,10 @@
 //  WAD File Definitions
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
-unit dr_wad;
+unit vxl_wad;
 
 interface
 

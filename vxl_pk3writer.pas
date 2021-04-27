@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -22,10 +22,10 @@
 //  PK3 Writer
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
-unit dr_pk3writer;
+unit vxl_pk3writer;
 
 interface
 
@@ -35,7 +35,7 @@ uses
   Types,
   zlib,
   Windows,
-  dr_utils;
+  vxl_utils;
 
 type
   TCommonFileHeader = packed record

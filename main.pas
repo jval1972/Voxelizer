@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 //  Main Form
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-model/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
 unit main;
@@ -32,8 +32,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, pngimage, xTGA, jpeg, zBitmap, ComCtrls, ExtCtrls, Buttons, Menus,
-  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, models, 
-  dr_filemenuhistory, dr_slider;
+  StdCtrls, AppEvnts, ExtDlgs, clipbrd, ToolWin, dglOpenGL, models,
+  vxl_filemenuhistory;
 
 type
   TForm1 = class(TForm)
@@ -157,10 +157,6 @@ type
     procedure OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
     procedure DoRenderGL;
     procedure Get3dPreviewBitmap(const b: TBitmap);
-    procedure RockToSliders;
-    procedure SlidersToLabels;
-    procedure RockToControls;
-    procedure ControlsToRock(Sender: TObject);
   public
     { Public declarations }
   end;
@@ -171,11 +167,11 @@ var
 implementation
 
 uses
-  dr_gl,
-  dr_defs,
-  dr_utils,
-  dr_voxels,
-  dr_palettes,
+  vxl_gl,
+  vxl_defs,
+  vxl_utils,
+  vxl_voxels,
+  vxl_palettes,
   frm_exportsprite,
   frm_exportvoxel;
 
@@ -298,7 +294,6 @@ begin
   begin
     SetFileName('');
     changed := False;
-    RockToControls;
     glneedsupdate := True;
     needsrecalc := True;
   end;
@@ -318,7 +313,6 @@ begin
   SetFileName('');
   changed := False;
   model.init;
-  RockToControls;
   glneedsupdate := True;
   needsrecalc := True;
 end;
@@ -351,7 +345,6 @@ begin
     fs.Free;
   end;
 
-  RockToControls;
   filemenuhistory.AddPath(fname);
   SetFileName(fname);
   glneedsupdate := True;
@@ -706,37 +699,6 @@ procedure TForm1.FrameEditKeyPress(Sender: TObject; var Key: Char);
 begin
   if not (Key in [#8, '0'..'9']) then
     Key := #0;
-end;
-
-procedure TForm1.RockToSliders;
-begin
-end;
-
-procedure TForm1.SlidersToLabels;
-begin
-end;
-
-procedure TForm1.RockToControls;
-begin
-  if closing then
-    Exit;
-
-  FrameEdit.Text := IntToStr(model.mFrame);
-
-  RockToSliders;
-  SlidersToLabels;
-end;
-
-procedure TForm1.ControlsToRock(Sender: TObject);
-begin
-  if closing then
-    Exit;
-
-  SlidersToLabels;
-  model.mFrame := StrToIntDef(FrameEdit.Text, 661);
-
-  needsrecalc := True;
-  changed := True;
 end;
 
 procedure TForm1.FrameEditChange(Sender: TObject);

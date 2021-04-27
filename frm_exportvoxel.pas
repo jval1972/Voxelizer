@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 //  Export Voxel Form
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-model/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
 unit frm_exportvoxel;
@@ -31,7 +31,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Buttons, models, dr_voxels;
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Buttons, models, vxl_voxels;
 
 type
   TExportVoxelForm = class(TForm)
@@ -83,9 +83,9 @@ implementation
 {$R *.dfm}
 
 uses
-  dr_defs,
-  dr_utils,
-  dr_voxelexport;
+  vxl_defs,
+  vxl_utils,
+  vxl_voxelexport;
 
 procedure TExportVoxelForm.FormCreate(Sender: TObject);
 var

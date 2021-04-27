@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -19,13 +19,13 @@
 //  02111-1307, USA.
 //
 // DESCRIPTION:
-//  Export rock to voxelbuffer
+//  Export model to voxelbuffer
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
-unit dr_voxelexport;
+unit vxl_voxelexport;
 
 interface
 
@@ -34,9 +34,9 @@ uses
   Classes,
   SysUtils,
   Graphics,
-  dr_voxels,
+  vxl_voxels,
   models,
-  dr_voxelizer;
+  vxl_voxelizer;
 
 procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
   const voxsize: integer; const rocktex: TBitmap);
@@ -44,7 +44,7 @@ procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
 implementation
 
 uses
-  dr_defs;
+  vxl_defs;
 
 procedure DT_CreateVoxelFacesFromModel(const mVertCount, mFaceCount: integer;
   const mVert: array of fvec5_t; const mFace: array of ivec3_t;

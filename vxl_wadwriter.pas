@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -22,10 +22,10 @@
 //  WAD Writer
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
-unit dr_wadwriter;
+unit vxl_wadwriter;
 
 interface
 
@@ -54,7 +54,7 @@ function AddDataToWAD(const wad: TWADWriter; const lumpname, data: string): bool
 implementation
 
 uses
-  dr_wad;
+  vxl_wad;
 
 constructor TWadWriter.Create;
 begin

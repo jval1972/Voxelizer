@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -19,15 +19,15 @@
 //  02111-1307, USA.
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
-unit dr_doompatch;
+unit vxl_doompatch;
 
 interface
 
 uses
-  Windows, Classes, SysUtils, Graphics, dr_utils;
+  Windows, Classes, SysUtils, Graphics, vxl_utils;
 
 function BmpAsPatch(const b: TBitmap; const palarray: PByteArray;
   const offsl: integer = MAXINT; const offst: integer = MAXINT): TMemoryStream;
@@ -35,7 +35,7 @@ function BmpAsPatch(const b: TBitmap; const palarray: PByteArray;
 implementation
 
 uses
-  dr_palettes;
+  vxl_palettes;
 
 type
   patch_t = packed record

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-//  DOOMROCK: Doom Rock Sprite Generator
+//  Voxelizer
 //  Copyright (C) 2021 by Jim Valavanis
 //
 //  This program is free software; you can redistribute it and/or
@@ -22,15 +22,15 @@
 //  Voxelizer
 //
 //------------------------------------------------------------------------------
-//  Site  : https://sourceforge.net/projects/doom-rock/
+//  Site  : https://sourceforge.net/projects/voxelizer/
 //------------------------------------------------------------------------------
 
-unit dr_voxelizer;
+unit vxl_voxelizer;
 
 interface
 
 uses
-  Windows, Classes, SysUtils, Graphics, dr_voxels;
+  Windows, Classes, SysUtils, Graphics, vxl_voxels;
 
 type
   meshvertex_t = record
@@ -65,7 +65,7 @@ procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TBitmap;
 implementation
 
 uses
-  dr_utils;
+  vxl_utils;
 
 type
   tri_orientation_t = (
