@@ -189,7 +189,7 @@ begin
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    glColor3f(0.5, 0.6, 0.1);
+    glColor3f(0.4, 0.7, 0.4);
     glBegin(GL_QUADS);
       glVertex3f(DWORLD * DRUNIT, -DWORLD * DRUNIT, DWORLD * DRUNIT);
       glVertex3f(DWORLD * DRUNIT, -DWORLD * DRUNIT, -DWORLD * DRUNIT);
@@ -218,7 +218,7 @@ begin
     glEnd;
 
     glDisable(GL_CULL_FACE);
-    glColor3f(0.5, 0.5, 1.0);
+    glColor3f(0.3, 0.3, 1.0);
     glBegin(GL_QUADS);
       glVertex3f(DWORLD * DRUNIT, DWORLD * DRUNIT, DWORLD * DRUNIT);
       glVertex3f(DWORLD * DRUNIT, DWORLD * DRUNIT, -DWORLD * DRUNIT);
