@@ -96,6 +96,7 @@ type
     LoadTrunkBitBtn1: TBitBtn;
     ExportSpriteSpeedButton: TSpeedButton;
     ExportVoxelSpeedButton: TSpeedButton;
+    NumFramesLabel: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure NewButton1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -314,6 +315,7 @@ begin
   model.mFrame := aframe;
   FrameEdit.Text := IntToStr(model.mFrame);
   glneedsupdate := True;
+  NumFramesLabel.Caption := '0 total frames';
   needsrecalc := True;
 end;
 
@@ -343,6 +345,7 @@ begin
   md2 := TMD2Model.Create(fname);
   md2.DrawFrameToModel(model, 0);
   numframes := md2.GetNumFrames;
+  NumFramesLabel.Caption := IntToStr(numframes) + ' total frames';
   md2.Free;
 
   filemenuhistory.AddPath(fname);
@@ -714,6 +717,7 @@ begin
       md2 := TMD2Model.Create(ffilename);
       md2.DrawFrameToModel(model, model.mFrame);
       numframes := md2.GetNumFrames;
+      NumFramesLabel.Caption := IntToStr(numframes) + ' total frames';
       md2.Free;
       glneedsupdate := True;
       needsrecalc := True;
@@ -738,6 +742,7 @@ begin
       md2 := TMD2Model.Create(ffilename);
       md2.DrawFrameToModel(model, model.mFrame);
       numframes := md2.GetNumFrames;
+      NumFramesLabel.Caption := IntToStr(numframes) + ' total frames';
       md2.Free;
       glneedsupdate := True;
       needsrecalc := True;
@@ -768,6 +773,7 @@ begin
       md2 := TMD2Model.Create(ffilename);
       md2.DrawFrameToModel(model, model.mFrame);
       numframes := md2.GetNumFrames;
+      NumFramesLabel.Caption := IntToStr(numframes) + ' total frames';
       md2.Free;
       glneedsupdate := True;
       needsrecalc := True;

@@ -1095,7 +1095,7 @@ object Form1: TForm1
       Top = 2
       Width = 76
       Height = 64
-      Hint = 'Create a new Tree'
+      Hint = 'Clear the scene'
       Caption = 'New'
       Flat = True
       Glyph.Data = {
@@ -1205,7 +1205,7 @@ object Form1: TForm1
       Top = 2
       Width = 76
       Height = 64
-      Hint = 'Open a Tree from disk'
+      Hint = 'Open md2 model from disk'
       Caption = 'Open'
       Flat = True
       Glyph.Data = {
@@ -1323,6 +1323,7 @@ object Form1: TForm1
       Top = 2
       Width = 76
       Height = 64
+      Hint = 'Export model as sprite'
       AllowAllUp = True
       Caption = 'Export Sprite'
       Flat = True
@@ -1433,6 +1434,7 @@ object Form1: TForm1
       Top = 2
       Width = 76
       Height = 64
+      Hint = 'Export model as voxel'
       AllowAllUp = True
       Caption = 'Export Voxel'
       Flat = True
@@ -1741,7 +1743,7 @@ object Form1: TForm1
           end
           object ModelImage: TImage
             Left = 0
-            Top = 64
+            Top = 96
             Width = 256
             Height = 256
             Hint = 'Model Texture (double click to change)'
@@ -2778,6 +2780,13 @@ object Form1: TForm1
             Stretch = True
             OnDblClick = ModelImageDblClick
           end
+          object NumFramesLabel: TLabel
+            Left = 8
+            Top = 42
+            Width = 67
+            Height = 13
+            Caption = '0 total frames'
+          end
           object FrameEdit: TEdit
             Left = 72
             Top = 8
@@ -2792,10 +2801,11 @@ object Form1: TForm1
           end
           object LoadTrunkBitBtn1: TBitBtn
             Left = 8
-            Top = 34
+            Top = 66
             Width = 75
             Height = 25
-            Caption = 'Load Texture'
+            Hint = 'Load model skin/texture'
+            Caption = 'Load Skin'
             TabOrder = 1
             OnClick = ModelImageDblClick
           end
