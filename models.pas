@@ -58,6 +58,7 @@ type
     destructor Destroy; override;
     procedure init;
     function AddVert(const x, y, z, u, v: single): integer;
+    function AddFace(const f1, f2, f3: integer): integer;
     function maxcoord: single;
     function maxdiameter: single;
   end;
@@ -104,6 +105,16 @@ begin
   mVert[Result].z := z;
   mVert[Result].u := u;
   mVert[Result].v := v;
+end;
+
+function model_t.AddFace(const f1, f2, f3: integer): integer;
+begin
+  Result := mFaceCount;
+  inc(mFaceCount);
+  SetLength(mFace, mFaceCount);
+  mFace[Result].x := f1;
+  mFace[Result].y := f2;
+  mFace[Result].z := f3;
 end;
 
 procedure model_t.init;

@@ -150,8 +150,8 @@ type
     needsrecalc: boolean;
     closing: boolean;
     procedure Idle(Sender: TObject; var Done: Boolean);
-    procedure DoNewRock(const seed: integer);
-    function DoLoadRock(const fname: string): boolean;
+    procedure DoNewModel(const aframe: integer);
+    function DoLoadModel(const fname: string): boolean;
     procedure SetFileName(const fname: string);
     procedure UpdateStausbar;
     procedure OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
@@ -172,6 +172,7 @@ uses
   vxl_utils,
   vxl_voxels,
   vxl_palettes,
+  vxl_md2model,
   frm_exportsprite,
   frm_exportvoxel;
 
@@ -287,7 +288,7 @@ begin
 
   doCreate := True;
   if ParamCount > 0 then
-    if DoLoadRock(ParamStr(1)) then
+    if DoLoadModel(ParamStr(1)) then
       doCreate := False;
 
   if DoCreate then
@@ -304,15 +305,17 @@ end;
 
 procedure TForm1.NewButton1Click(Sender: TObject);
 begin
-  DoNewRock(random($10000));
+  DoNewModel(0);
   ResetCamera;
 end;
 
-procedure TForm1.DoNewRock(const seed: integer);
+procedure TForm1.DoNewModel(const aframe: integer);
 begin
   SetFileName('');
   changed := False;
   model.init;
+  model.mFrame := aframe;
+  FrameEdit.Text := IntToStr(model.mFrame);
   glneedsupdate := True;
   needsrecalc := True;
 end;
@@ -325,10 +328,10 @@ begin
     Caption := Caption + ' - ' + MkShortName(ffilename);
 end;
 
-function TForm1.DoLoadRock(const fname: string): boolean;
+function TForm1.DoLoadModel(const fname: string): boolean;
 var
-  fs: TFileStream;
   s: string;
+  md2: TMD2Model;
 begin
   if not FileExists(fname) then
   begin
@@ -338,12 +341,10 @@ begin
     exit;
   end;
 
-  fs := TFileStream.Create(fname, fmOpenRead or fmShareDenyWrite);
-  try
-    // Add load model code
-  finally
-    fs.Free;
-  end;
+  DoNewModel(0);
+  md2 := TMD2Model.Create(fname);
+  md2.DrawFrameToModel(model, 0);
+  md2.Free;
 
   filemenuhistory.AddPath(fname);
   SetFileName(fname);
@@ -401,7 +402,7 @@ procedure TForm1.OpenButton1Click(Sender: TObject);
 begin
   if OpenDialog1.Execute then
   begin
-    DoLoadRock(OpenDialog1.FileName);
+    DoLoadModel(OpenDialog1.FileName);
     ResetCamera;
   end;
 end;
@@ -572,7 +573,7 @@ end;
 
 procedure TForm1.OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
 begin
-  DoLoadRock(fname);
+  DoLoadModel(fname);
   ResetCamera;
 end;
 

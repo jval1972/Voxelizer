@@ -39,6 +39,8 @@ type
     fNumVertexes: integer;
     frameNames: TStringList;
     TheVectorsArray: PGLVertexArraysP;
+    fscale: single;
+    fyoffset: single;
     UV: PGLTexcoordArray;
     fname: string;
   public
@@ -156,6 +158,19 @@ var
   fm_iTriangles: integer;
   modelheader: TDmd2_T;
   m: TMD2Model;
+
+  procedure _offsets;
+  begin
+    if abs(vert.x) > fscale then
+      fscale := abs(vert.x);
+    if abs(vert.y) > fscale then
+      fscale := abs(vert.y);
+    if abs(vert.z) > fscale then
+      fscale := abs(vert.z);
+    if vert.y < fyoffset then
+      fyoffset := vert.y;
+  end;
+
 begin
   Inherited Create;
   fname := name;
@@ -165,6 +180,9 @@ begin
   fNumFrames := 0;
   fNumVertexes := 0;
   strm := TFileStream.Create(fname, fmOpenRead or fmShareDenyWrite);
+
+  fscale := 1.0;
+  fyoffset := 0.0;
 
   strm.Read(modelheader, SizeOf(modelheader));
 
@@ -265,18 +283,21 @@ begin
       vert.x := m_frame_list[i].vertex[idx1].y;
       vert.y := m_frame_list[i].vertex[idx1].z;
       vert.z := m_frame_list[i].vertex[idx1].x;
+      _offsets;
       inc(vert);
 
       idx1 := m_index_list[j].b;
       vert.x := m_frame_list[i].vertex[idx1].y;
       vert.y := m_frame_list[i].vertex[idx1].z;
       vert.z := m_frame_list[i].vertex[idx1].x;
+      _offsets;
       inc(vert);
 
       idx1 := m_index_list[j].c;
       vert.x := m_frame_list[i].vertex[idx1].y;
       vert.y := m_frame_list[i].vertex[idx1].z;
       vert.z := m_frame_list[i].vertex[idx1].x;
+      _offsets;
       inc(vert);
     end;
   end;
@@ -311,10 +332,31 @@ end;
 
 procedure TMD2Model.DrawFrameToModel(const mdl: model_t; const frm: integer);
 var
-  i: integer;
+  i, k: integer;
+  f1, f2, f3: integer;
 begin
-  for i := 0 to fNumVertexes - 1 do
-    mdl.AddVert(TheVectorsArray[frm][i].x, TheVectorsArray[frm][i].y, TheVectorsArray[frm][i].z, UV[i].u, UV[i].v);
+  for k := 0 to fNumVertexes div 3 - 1 do
+  begin
+    i := 3 * k;
+    f1 := mdl.AddVert(
+      TheVectorsArray[frm][i].x / fscale,
+      (TheVectorsArray[frm][i].y - fyoffset) / fscale,
+      TheVectorsArray[frm][i].z / fscale,
+      UV[i].u, UV[i].v);
+    inc(i);
+    f2 := mdl.AddVert(
+      TheVectorsArray[frm][i].x / fscale,
+      (TheVectorsArray[frm][i].y - fyoffset) / fscale,
+      TheVectorsArray[frm][i].z / fscale,
+      UV[i].u, UV[i].v);
+    inc(i);
+    f3 := mdl.AddVert(
+      TheVectorsArray[frm][i].x / fscale,
+      (TheVectorsArray[frm][i].y - fyoffset) / fscale,
+      TheVectorsArray[frm][i].z / fscale,
+      UV[i].u, UV[i].v);
+    mdl.AddFace(f1, f2, f3);
+  end;
 end;
 
 //------------------------------------------------------------------------------
