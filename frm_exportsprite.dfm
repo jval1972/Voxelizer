@@ -1120,9 +1120,9 @@ object ExportSpriteForm: TExportSpriteForm
   end
   object PatchRadioGroup: TRadioGroup
     Left = 232
-    Top = 48
+    Top = 128
     Width = 177
-    Height = 153
+    Height = 145
     Caption = ' Patch Palette '
     ItemIndex = 0
     Items.Strings = (
@@ -1436,6 +1436,18 @@ object ExportSpriteForm: TExportSpriteForm
       TabStop = True
       OnClick = AutoVoxSizeRadioButtonClick
     end
+  end
+  object RotationsRadioGroup: TRadioGroup
+    Left = 232
+    Top = 48
+    Width = 177
+    Height = 65
+    Caption = ' Rotations '
+    ItemIndex = 0
+    Items.Strings = (
+      '1 Rotation'
+      '8 Rotations')
+    TabOrder = 8
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'pk3'

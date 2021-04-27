@@ -78,6 +78,7 @@ type
     voxRadioButton256x256: TRadioButton;
     SolidCheckBox: TCheckBox;
     AutoVoxSizeRadioButton: TRadioButton;
+    RotationsRadioGroup: TRadioGroup;
     procedure SpritePrefixButtonClick(Sender: TObject);
     procedure SelectFileButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -547,6 +548,8 @@ var
   voxsize: integer;
   w, h: integer;
   pk3entry: string;
+  rot: integer;
+  oldtheta: float;
 begin
   Screen.Cursor := crHourGlass;
   wad := TWADWriter.Create;
@@ -591,19 +594,47 @@ begin
       b.Width := 256;
       b.Height := 255;
       b.PixelFormat := pf32bit;
-      b.Canvas.Draw(0, 0, buffer);
-      for i := 0 to 255 do
-        b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
-      case PatchRadioGroup.ItemIndex of
-      0: ms := BmpAsPatch(b, @DoomPaletteRaw);
-      1: ms := BmpAsPatch(b, @HereticPaletteRaw);
-      2: ms := BmpAsPatch(b, @HexenPaletteRaw);
-      3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+
+      if RotationsRadioGroup.ItemIndex = 0 then
+      begin
+        b.Canvas.Draw(0, 0, buffer);
+        for i := 0 to 255 do
+          b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
+        case PatchRadioGroup.ItemIndex of
+        0: ms := BmpAsPatch(b, @DoomPaletteRaw);
+        1: ms := BmpAsPatch(b, @HereticPaletteRaw);
+        2: ms := BmpAsPatch(b, @HexenPaletteRaw);
+        3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+        else
+            ms := BmpAsPatch(b, @RadixPaletteRaw);
+        end;
+        wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
+        ms.Free;
+      end
       else
-        ms := BmpAsPatch(b, @RadixPaletteRaw);
+      begin
+        oldtheta := ftheta;
+        for rot := 0 to 7 do
+        begin
+          DoUpdate3d;
+          b.Canvas.Draw(0, 0, buffer);
+          for i := 0 to 255 do
+            b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
+          case PatchRadioGroup.ItemIndex of
+          0: ms := BmpAsPatch(b, @DoomPaletteRaw);
+          1: ms := BmpAsPatch(b, @HereticPaletteRaw);
+          2: ms := BmpAsPatch(b, @HexenPaletteRaw);
+          3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+          else
+              ms := BmpAsPatch(b, @RadixPaletteRaw);
+          end;
+          wad.AddData(PrefixEdit.Text + IntToStr(rot + 1), ms.Memory, ms.Size);
+          ms.Free;
+          ftheta := ftheta + pi / 4;
+        end;
+        ftheta := oldtheta;
+        needs3dupdate := True;
       end;
-      wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
-      ms.Free;
     finally
       b.Free;
     end;
@@ -691,6 +722,8 @@ var
   vox: voxelbuffer_p;
   voxsize: integer;
   w, h: integer;
+  rot: integer;
+  oldtheta: float;
 begin
   Screen.Cursor := crHourGlass;
   pk3 := TPK3Writer.Create;
@@ -736,19 +769,47 @@ begin
         b.Width := 256;
         b.Height := 255;
         b.PixelFormat := pf32bit;
-        b.Canvas.Draw(0, 0, buffer);
-        for i := 0 to 255 do
-          b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
-        case PatchRadioGroup.ItemIndex of
-        0: ms := BmpAsPatch(b, @DoomPaletteRaw);
-        1: ms := BmpAsPatch(b, @HereticPaletteRaw);
-        2: ms := BmpAsPatch(b, @HexenPaletteRaw);
-        3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+
+        if RotationsRadioGroup.ItemIndex = 0 then
+        begin
+          b.Canvas.Draw(0, 0, buffer);
+          for i := 0 to 255 do
+            b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
+          case PatchRadioGroup.ItemIndex of
+          0: ms := BmpAsPatch(b, @DoomPaletteRaw);
+          1: ms := BmpAsPatch(b, @HereticPaletteRaw);
+          2: ms := BmpAsPatch(b, @HexenPaletteRaw);
+          3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+          else
+            ms := BmpAsPatch(b, @RadixPaletteRaw);
+          end;
+          wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
+          ms.Free;
+        end
         else
-          ms := BmpAsPatch(b, @RadixPaletteRaw);
+        begin
+          oldtheta := ftheta;
+          for rot := 0 to 7 do
+          begin
+            DoUpdate3d;
+            b.Canvas.Draw(0, 0, buffer);
+            for i := 0 to 255 do
+              b.Canvas.Pixels[i, 0] := RGB(0, 0, 0);
+            case PatchRadioGroup.ItemIndex of
+            0: ms := BmpAsPatch(b, @DoomPaletteRaw);
+            1: ms := BmpAsPatch(b, @HereticPaletteRaw);
+            2: ms := BmpAsPatch(b, @HexenPaletteRaw);
+            3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+            else
+              ms := BmpAsPatch(b, @RadixPaletteRaw);
+            end;
+            wad.AddData(PrefixEdit.Text + IntToStr(rot + 1), ms.Memory, ms.Size);
+            ms.Free;
+            ftheta := ftheta + pi / 4;
+          end;
+          ftheta := oldtheta;
+          needs3dupdate := True;
         end;
-        wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
-        ms.Free;
       finally
         b.Free;
       end;
