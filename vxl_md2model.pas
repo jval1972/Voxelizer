@@ -46,13 +46,14 @@ type
   public
     constructor Create(const name: string); virtual;
     destructor Destroy; override;
-    procedure DrawFrameToModel(const mdl: model_t; const frm: integer); virtual;
+    procedure DrawFrameToModel(const mdl: model_t; frm: integer); virtual;
     function StartFrame(const i: integer): integer; overload; virtual;
     function EndFrame(const i: integer): integer; overload; virtual;
     function StartFrame(const frame: string): integer; overload; virtual;
     function EndFrame(const frame: string): integer; overload; virtual;
     function FrameName(const i: integer): string; virtual;
     function FrameIndex(const frame: string): integer; virtual;
+    function GetNumFrames: integer;
   end;
 
 implementation
@@ -182,7 +183,7 @@ begin
   strm := TFileStream.Create(fname, fmOpenRead or fmShareDenyWrite);
 
   fscale := 1.0;
-  fyoffset := 0.0;
+  fyoffset := 1000000.0;
 
   strm.Read(modelheader, SizeOf(modelheader));
 
@@ -330,11 +331,16 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TMD2Model.DrawFrameToModel(const mdl: model_t; const frm: integer);
+procedure TMD2Model.DrawFrameToModel(const mdl: model_t; frm: integer);
 var
   i, k: integer;
   f1, f2, f3: integer;
+  nframes: integer;
 begin
+  nframes := GetNumFrames;
+  if nframes <= 0 then
+    Exit;
+  frm := GetIntInRange(frm, 0, nframes - 1);
   for k := 0 to fNumVertexes div 3 - 1 do
   begin
     i := 3 * k;
@@ -414,6 +420,24 @@ begin
   result := frameNames.IndexOf(frame);
   if result = -1 then
     result := frameNames.IndexOf(UpperCase(frame));
+end;
+
+function TMD2Model.GetNumFrames: integer;
+var
+  i: integer;
+  frm: integer;
+begin
+  Result := 0;
+  for i := 0 to frameNames.Count - 1 do
+    if frameNames.Objects[i] <> nil then
+    begin
+      frm := (frameNames.Objects[i] as TFrameIndexInfo).StartFrame;
+      if frm > Result then
+        Result := frm;
+      frm := (frameNames.Objects[i] as TFrameIndexInfo).EndFrame;
+      if frm > Result then
+        Result := frm;
+    end;
 end;
 
 //------------------------------------------------------------------------------

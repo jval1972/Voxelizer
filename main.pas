@@ -61,11 +61,9 @@ type
     OpenGLScrollBox: TScrollBox;
     OpenGLPanel: TPanel;
     Splitter1: TSplitter;
-    SaveAsButton1: TSpeedButton;
     OpenButton1: TSpeedButton;
     NewButton1: TSpeedButton;
     ToolButton1: TToolButton;
-    ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
     AboutButton1: TSpeedButton;
@@ -86,11 +84,6 @@ type
     Sprite1: TMenuItem;
     N1: TMenuItem;
     Voxel1: TMenuItem;
-    Panel1: TPanel;
-    ExportSpriteSpeedButton: TSpeedButton;
-    ExportVoxelSpeedButton: TSpeedButton;
-    ExportMD2ModelSpeedButton1: TSpeedButton;
-    Bevel1: TBevel;
     ScrollBox1: TScrollBox;
     PropertiesPanel: TPanel;
     PageControl1: TPageControl;
@@ -101,6 +94,8 @@ type
     FrameEdit: TEdit;
     ModelImage: TImage;
     LoadTrunkBitBtn1: TBitBtn;
+    ExportSpriteSpeedButton: TSpeedButton;
+    ExportVoxelSpeedButton: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure NewButton1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -149,6 +144,7 @@ type
     glneedsupdate: boolean;
     needsrecalc: boolean;
     closing: boolean;
+    numframes: integer;
     procedure Idle(Sender: TObject; var Done: Boolean);
     procedure DoNewModel(const aframe: integer);
     function DoLoadModel(const fname: string): boolean;
@@ -197,6 +193,7 @@ begin
   closing := False;
 
   PageControl1.ActivePageIndex := 0;
+  numframes := 0;
 
   filemenuhistory := TFileMenuHistory.Create(self);
   filemenuhistory.MenuItem0 := HistoryItem0;
@@ -342,8 +339,10 @@ begin
   end;
 
   DoNewModel(0);
+  numframes := 0;
   md2 := TMD2Model.Create(fname);
   md2.DrawFrameToModel(model, 0);
+  numframes := md2.GetNumFrames;
   md2.Free;
 
   filemenuhistory.AddPath(fname);
@@ -661,10 +660,30 @@ begin
 end;
 
 procedure TForm1.ModelImageDblClick(Sender: TObject);
+var
+  bm: TBitmap;
+  i, y: integer;
+  ln: PLongWordArray;
 begin
   if OpenPictureDialog1.Execute then
   begin
     ModelImage.Picture.LoadFromFile(OpenPictureDialog1.FileName);
+
+    bm := TBitmap.Create;
+    bm.Width := ModelImage.Picture.Width;
+    bm.Height := ModelImage.Picture.Height;
+    bm.PixelFormat := pf32bit;
+    bm.Canvas.Draw(0, 0, ModelImage.Picture.Graphic);
+    for y := 0 to bm.Height - 1 do
+    begin
+      ln := bm.ScanLine[y];
+      for i := 0 to bm.Width - 1 do
+        if ln[0] = 0 then
+          ln[0] := $010101;
+    end;
+    ModelImage.Picture.Assign(bm);
+    bm.Free;
+
     glDeleteTextures(1, @modeltexture);
     modeltexture := gld_CreateTexture(ModelImage.Picture, False);
     changed := True;
@@ -680,20 +699,49 @@ end;
 procedure TForm1.SeedSpeedButton1Click(Sender: TObject);
 var
   x: integer;
+  md2: TMD2Model;
 begin
-  x := StrToIntDef(FrameEdit.Text, -1);
-  if x >= 0 then
-    if x < MAXINT then
-      FrameEdit.Text := IntToStr(x + 1);
+  x := GetIntInRange(StrToIntDef(FrameEdit.Text, -1) + 1, 0, numframes - 1);
+  if x < 0 then
+    x := 0;
+  FrameEdit.Text := IntToStr(x);
+
+  if ffilename <> '' then
+    if FileExists(ffilename) then
+    begin
+      model.init;
+      model.mFrame := x;
+      md2 := TMD2Model.Create(ffilename);
+      md2.DrawFrameToModel(model, model.mFrame);
+      numframes := md2.GetNumFrames;
+      md2.Free;
+      glneedsupdate := True;
+      needsrecalc := True;
+    end;
 end;
 
 procedure TForm1.SeedSpeedButton2Click(Sender: TObject);
 var
   x: integer;
+  md2: TMD2Model;
 begin
-  x := StrToIntDef(FrameEdit.Text, -1);
-  if x > 0 then
-    FrameEdit.Text := IntToStr(x - 1);
+  x := GetIntInRange(StrToIntDef(FrameEdit.Text, -1) - 1, 0, numframes - 1);
+  if x < 0 then
+    x := 0;
+  FrameEdit.Text := IntToStr(x);
+
+  if ffilename <> '' then
+    if FileExists(ffilename) then
+    begin
+      model.init;
+      model.mFrame := x;
+      md2 := TMD2Model.Create(ffilename);
+      md2.DrawFrameToModel(model, model.mFrame);
+      numframes := md2.GetNumFrames;
+      md2.Free;
+      glneedsupdate := True;
+      needsrecalc := True;
+    end;
 end;
 
 procedure TForm1.FrameEditKeyPress(Sender: TObject; var Key: Char);
