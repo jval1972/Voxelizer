@@ -135,7 +135,6 @@ uses
   dr_wadwriter,
   dr_doompatch,
   dr_palettes,
-  dr_ddmodel,
   dr_voxels,
   dr_voxelexport,
   dr_pk3writer,
@@ -548,7 +547,6 @@ var
   voxsize: integer;
   w, h: integer;
   pk3entry: string;
-  modeldef: string;
 begin
   Screen.Cursor := crHourGlass;
   wad := TWADWriter.Create;
@@ -693,8 +691,6 @@ var
   vox: voxelbuffer_p;
   voxsize: integer;
   w, h: integer;
-  modeldef: string;
-  png: TPngObject;
 begin
   Screen.Cursor := crHourGlass;
   pk3 := TPK3Writer.Create;
@@ -710,10 +706,10 @@ begin
             name := name + stmp[i];
         script.Add('ACTOR ' + stmp + ' ' + EditorNumberEdit.Text);
         script.Add('{');
-        script.Add('  Health 10000');
+        script.Add('  Health 100');
         script.Add('  Radius ' + RadiusEdit.Text);
         script.Add('  Height ' + HeightEdit.Text);
-        script.Add('  Mass 100000');
+        script.Add('  Mass 100');
         if SolidCheckBox.Checked then
           script.Add('  +SOLID');
         script.Add('  States');
