@@ -54,7 +54,8 @@ uses
   frm_exportvoxel in 'frm_exportvoxel.pas' {ExportVoxelForm},
   vxl_pk3writer in 'vxl_pk3writer.pas',
   vxl_md2model in 'vxl_md2model.pas',
-  vxl_gltypes in 'vxl_gltypes.pas';
+  vxl_gltypes in 'vxl_gltypes.pas',
+  pcximage in 'pcximage.pas';
 
 {$R *.res}
 
