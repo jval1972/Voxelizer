@@ -7,6 +7,8 @@ Export md2 models as voxels (sLab6's vox and DelphiDoom's ddvox formats)
 Export md2 models as Doom sprites
 
 ## Downloads
+[version 1.0.2.29 (20210427 - win32)](https://sourceforge.net/projects/voxelizer/files/VOXELIZER_1.0/VOXELIZER_1.0.2.29_bin.zip/download)
+
 [version 1.0.1.28 (20210427 - win32)](https://sourceforge.net/projects/voxelizer/files/VOXELIZER_1.0/VOXELIZER_1.0.1.28_bin.zip/download)
 
 
