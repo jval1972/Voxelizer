@@ -55,7 +55,6 @@ uses
   frm_exportvoxel in 'frm_exportvoxel.pas' {ExportVoxelForm},
   dr_triangulation in 'dr_triangulation.pas',
   clipper in 'clipper.pas',
-  dr_ddmodel in 'dr_ddmodel.pas',
   dr_pk3writer in 'dr_pk3writer.pas';
 
 {$R *.res}
