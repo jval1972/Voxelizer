@@ -751,10 +751,27 @@ begin
 end;
 
 procedure TForm1.FrameEditChange(Sender: TObject);
+var
+  x: integer;
+  md2: TMD2Model;
 begin
-  model.mFrame := StrToIntDef(FrameEdit.Text, 661);
-  needsrecalc := True;
-  changed := True;
+  x := GetIntInRange(StrToIntDef(FrameEdit.Text, -1), 0, numframes - 1);
+  if x < 0 then
+    x := 0;
+  FrameEdit.Text := IntToStr(x);
+
+  if ffilename <> '' then
+    if FileExists(ffilename) then
+    begin
+      model.init;
+      model.mFrame := x;
+      md2 := TMD2Model.Create(ffilename);
+      md2.DrawFrameToModel(model, model.mFrame);
+      numframes := md2.GetNumFrames;
+      md2.Free;
+      glneedsupdate := True;
+      needsrecalc := True;
+    end;
 end;
 
 procedure TForm1.ExportScreenshot1Click(Sender: TObject);
