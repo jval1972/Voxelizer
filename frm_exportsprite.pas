@@ -535,6 +535,17 @@ begin
   Result := definitionsize / 1024 * maxcoord;
 end;
 
+const
+  ROTATIONTRANSLATIONS: array[1..3] of array [0..32] of integer = (
+    ( 0,  1,  2,  3,  4,  5,  6,  7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+    ( 0,  8,  1,  9,  2, 10,  3, 11,  4, 12,  5, 13,  6, 14,  7, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1),
+    ( 0, 16,  8, 17,  1, 18,  9, 19,  2, 20, 10, 21,  3, 22, 11, 23,  4, 24, 12, 25,  5, 26, 13, 27,  6, 28, 14, 29,  7, 30, 15, 31, -1)
+  );
+
+  ROTATIONCHARS = '123456789ABCDEFGHIJKLMNOPQRSTUVW';
+
+  ROTATIONNUM: array[1..3] of integer = (8, 16, 32);
+
 procedure TExportSpriteForm.DoExportSpriteWAD;
 var
   wad: TWADWriter;
@@ -550,6 +561,7 @@ var
   pk3entry: string;
   rot: integer;
   oldtheta: float;
+  rotchars: PIntegerArray;
 begin
   Screen.Cursor := crHourGlass;
   wad := TWADWriter.Create;
@@ -613,8 +625,10 @@ begin
       end
       else
       begin
+        rotchars := @ROTATIONTRANSLATIONS[RotationsRadioGroup.ItemIndex];
         oldtheta := ftheta;
-        for rot := 0 to 7 do
+
+        for rot := 0 to ROTATIONNUM[RotationsRadioGroup.ItemIndex] - 1 do
         begin
           DoUpdate3d;
           b.Canvas.Draw(0, 0, buffer);
@@ -628,9 +642,9 @@ begin
           else
               ms := BmpAsPatch(b, @RadixPaletteRaw);
           end;
-          wad.AddData(PrefixEdit.Text + IntToStr(rot + 1), ms.Memory, ms.Size);
+          wad.AddData(PrefixEdit.Text + ROTATIONCHARS[rotchars[rot] + 1], ms.Memory, ms.Size);
           ms.Free;
-          ftheta := ftheta + pi / 4;
+          ftheta := ftheta + 2 * pi / ROTATIONNUM[RotationsRadioGroup.ItemIndex];
         end;
         ftheta := oldtheta;
         needs3dupdate := True;
@@ -724,6 +738,7 @@ var
   w, h: integer;
   rot: integer;
   oldtheta: float;
+  rotchars: PIntegerArray;
 begin
   Screen.Cursor := crHourGlass;
   pk3 := TPK3Writer.Create;
@@ -788,8 +803,10 @@ begin
         end
         else
         begin
+          rotchars := @ROTATIONTRANSLATIONS[RotationsRadioGroup.ItemIndex];
           oldtheta := ftheta;
-          for rot := 0 to 7 do
+
+          for rot := 0 to ROTATIONNUM[RotationsRadioGroup.ItemIndex] - 1 do
           begin
             DoUpdate3d;
             b.Canvas.Draw(0, 0, buffer);
@@ -803,9 +820,9 @@ begin
             else
               ms := BmpAsPatch(b, @RadixPaletteRaw);
             end;
-            wad.AddData(PrefixEdit.Text + IntToStr(rot + 1), ms.Memory, ms.Size);
+            wad.AddData(PrefixEdit.Text + ROTATIONCHARS[rotchars[rot] + 1], ms.Memory, ms.Size);
             ms.Free;
-            ftheta := ftheta + pi / 4;
+            ftheta := ftheta + 2 * pi / ROTATIONNUM[RotationsRadioGroup.ItemIndex];
           end;
           ftheta := oldtheta;
           needs3dupdate := True;

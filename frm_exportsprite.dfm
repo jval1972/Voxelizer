@@ -1115,7 +1115,7 @@ object ExportSpriteForm: TExportSpriteForm
       CharCase = ecUpperCase
       MaxLength = 5
       TabOrder = 0
-      Text = 'RRRRA'
+      Text = 'VVVVA'
     end
   end
   object PatchRadioGroup: TRadioGroup
@@ -1386,7 +1386,7 @@ object ExportSpriteForm: TExportSpriteForm
     Left = 232
     Top = 288
     Width = 177
-    Height = 145
+    Height = 153
     Caption = ' Voxel '
     TabOrder = 5
     object GenerateVoxelCheckBox: TCheckBox
@@ -1443,10 +1443,13 @@ object ExportSpriteForm: TExportSpriteForm
     Width = 177
     Height = 65
     Caption = ' Rotations '
+    Columns = 2
     ItemIndex = 0
     Items.Strings = (
       '1 Rotation'
-      '8 Rotations')
+      '8 Rotations'
+      '16 Rotations'
+      '32 Rotations')
     TabOrder = 8
   end
   object SaveDialog1: TSaveDialog
