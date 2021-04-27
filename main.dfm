@@ -2944,8 +2944,8 @@ object Form1: TForm1
     Top = 225
   end
   object SavePictureDialog1: TSavePictureDialog
-    DefaultExt = 'bmp'
-    Filter = 'Bitmaps (*.bmp)|*.bmp'
+    DefaultExt = 'png'
+    Filter = 'PNG Image (*.png)|*.png'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 361
     Top = 153

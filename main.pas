@@ -777,6 +777,7 @@ end;
 procedure TForm1.ExportScreenshot1Click(Sender: TObject);
 var
   b: TBitmap;
+  png: TPngObject;
 begin
   if SavePictureDialog1.Execute then
   begin
@@ -785,8 +786,13 @@ begin
     try
       DoRenderGL;
       Get3dPreviewBitmap(b);
-      Clipboard.Assign(b);
-      b.SaveToFile(SavePictureDialog1.FileName);
+      png := TPngObject.Create;
+      try
+        png.Assign(b);
+        png.SaveToFile(SavePictureDialog1.FileName);
+      finally
+        png.Free;
+      end;
     finally
       b.Free;
     end;
