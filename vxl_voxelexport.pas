@@ -39,7 +39,7 @@ uses
   vxl_voxelizer;
 
 procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
-  const voxsize: integer; const rocktex: TBitmap);
+  const voxsize: integer; const modeltex: TBitmap);
 
 implementation
 
@@ -74,7 +74,7 @@ begin
 end;
 
 procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
-  const voxsize: integer; const rocktex: TBitmap);
+  const voxsize: integer; const modeltex: TBitmap);
 var
   xmin, xmax, ymin, ymax, zmin, zmax: single;
   i: integer;
@@ -127,7 +127,7 @@ begin
   scale := (voxsize - 1) / scale;
 
   DT_CreateVoxelFacesFromModel(t.mVertCount, t.mFaceCount, t.mVert, t.mFace,
-    scale, vox, voxsize, rocktex, true);
+    scale, vox, voxsize, modeltex, true);
 end;
 
 end.

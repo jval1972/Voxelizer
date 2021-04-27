@@ -150,7 +150,7 @@ type
     function DoLoadModel(const fname: string): boolean;
     procedure SetFileName(const fname: string);
     procedure UpdateStausbar;
-    procedure OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
+    procedure OnLoadModelFileMenuHistory(Sender: TObject; const fname: string);
     procedure DoRenderGL;
     procedure Get3dPreviewBitmap(const b: TBitmap);
   public
@@ -206,7 +206,7 @@ begin
   filemenuhistory.MenuItem7 := HistoryItem7;
   filemenuhistory.MenuItem8 := HistoryItem8;
   filemenuhistory.MenuItem9 := HistoryItem9;
-  filemenuhistory.OnOpen := OnLoadRockFileMenuHistory;
+  filemenuhistory.OnOpen := OnLoadModelFileMenuHistory;
 
   filemenuhistory.AddPath(bigstringtostring(@opt_filemenuhistory9));
   filemenuhistory.AddPath(bigstringtostring(@opt_filemenuhistory8));
@@ -570,7 +570,7 @@ begin
   StatusBar1.Panels[1].Text := Format('Rendered triangles = %d', [pt_rendredtriangles]);
 end;
 
-procedure TForm1.OnLoadRockFileMenuHistory(Sender: TObject; const fname: string);
+procedure TForm1.OnLoadModelFileMenuHistory(Sender: TObject; const fname: string);
 begin
   DoLoadModel(fname);
   ResetCamera;
