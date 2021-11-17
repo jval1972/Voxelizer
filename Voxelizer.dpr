@@ -56,7 +56,8 @@ uses
   vxl_md2model in 'vxl_md2model.pas',
   vxl_gltypes in 'vxl_gltypes.pas',
   pcximage in 'pcximage.pas',
-  vxl_zipfile in 'vxl_zipfile.pas';
+  vxl_zipfile in 'vxl_zipfile.pas',
+  vxl_threads in 'vxl_threads.pas';
 
 {$R *.res}
 
