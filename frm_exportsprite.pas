@@ -167,6 +167,7 @@ begin
   if SaveDialog1.Execute then
   begin
     FileNameEdit.Text := SaveDialog1.FileName;
+    FileNameEdit.Hint := SaveDialog1.FileName;
     Button1.Enabled := True;
   end;
 end;
@@ -949,7 +950,10 @@ end;
 procedure TExportSpriteForm.LoadPaletteSpeedButtonClick(Sender: TObject);
 begin
   if OpenPaletteDialog.Execute then
+  begin
     OtherPaletteEdit.Text := OpenPaletteDialog.FileName;
+    OtherPaletteEdit.Hint := OpenPaletteDialog.FileName;
+  end;
 end;
 
 procedure TExportSpriteForm.PatchRadioGroupClick(Sender: TObject);
