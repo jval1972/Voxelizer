@@ -42,11 +42,6 @@ type
     MainPanel: TPanel;
     PreviewGroupBox: TGroupBox;
     Image1: TImage;
-    Panel1: TPanel;
-    Bevel2: TBevel;
-    Label3: TLabel;
-    FileNameEdit: TEdit;
-    SelectFileButton: TSpeedButton;
     SaveVoxelDialog: TSaveDialog;
     SizeRadioGroup: TRadioGroup;
     PatchRadioGroup: TRadioGroup;
@@ -60,6 +55,20 @@ type
     ChooseOtherPalettePanel: TPanel;
     LoadPaletteSpeedButton: TSpeedButton;
     OtherPaletteEdit: TEdit;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Panel1: TPanel;
+    Label3: TLabel;
+    SelectFileButton: TSpeedButton;
+    FileNameEdit: TEdit;
+    Bevel2: TBevel;
+    Panel2: TPanel;
+    Label1: TLabel;
+    SelectZipFileButton: TSpeedButton;
+    ZIPFileNameEdit: TEdit;
+    SaveZIPDialog: TSaveDialog;
+    VoxelTypeRadioGroup: TRadioGroup;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FileNameEditChange(Sender: TObject);
@@ -69,6 +78,9 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure LoadPaletteSpeedButtonClick(Sender: TObject);
     procedure PatchRadioGroupClick(Sender: TObject);
+    procedure PageControl1Change(Sender: TObject);
+    procedure SelectZipFileButtonClick(Sender: TObject);
+    procedure VoxelTypeRadioGroupClick(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -76,6 +88,7 @@ type
     modeltex: TBitmap;
     vox: voxelbuffer_p;
     procedure UpdateControls;
+    procedure UpdateEnable;
     procedure CreateVoxel;
   public
     { Public declarations }
@@ -109,6 +122,8 @@ begin
 
   Image1.Picture.Bitmap.PixelFormat := pf32bit;
 
+  PageControl1.ActivePageIndex := 0;
+
   voxsize := opt_voxsize;
   if voxsize <> 32 then
     if voxsize <> 64 then
@@ -131,6 +146,11 @@ begin
     PatchRadioGroup.ItemIndex := 0;
   ChooseOtherPalettePanel.Visible := (PatchRadioGroup.ItemIndex = 6) and (PatchRadioGroup.Visible);
   OtherPaletteEdit.Text := bigstringtostring(@opt_customvoxpal);
+
+  if opt_zipvoxtype in [0..1] then
+    VoxelTypeRadioGroup.ItemIndex := opt_zipvoxtype
+  else
+    VoxelTypeRadioGroup.ItemIndex := 0;
 end;
 
 procedure TExportVoxelForm.SetModelVoxelParams(const amodel: model_t; const avox: voxelbuffer_p;
@@ -248,24 +268,40 @@ end;
 
 procedure TExportVoxelForm.FormShow(Sender: TObject);
 begin
+  UpdateEnable;
   UpdateControls;
 end;
 
-procedure TExportVoxelForm.FileNameEditChange(Sender: TObject);
+procedure TExportVoxelForm.UpdateEnable;
 var
   uName, uExt: string;
   e: boolean;
 begin
-  uName := Trim(FileNameEdit.Text);
-  e := uName <> '';
-  if e then
+  if PageControl1.ActivePageIndex = 0 then
   begin
-    uExt := UpperCase(ExtractFileExt(uName));
-    e := (uExt = '.DDVOX') or (uExt = '.VOX');
+    uName := Trim(FileNameEdit.Text);
+    e := uName <> '';
+    if e then
+    begin
+      uExt := UpperCase(ExtractFileExt(uName));
+      e := (uExt = '.DDVOX') or (uExt = '.VOX');
+    end;
     PatchRadioGroup.Visible := uExt = '.VOX';
-    ChooseOtherPalettePanel.Visible := (PatchRadioGroup.ItemIndex = 6) and (PatchRadioGroup.Visible);
+  end
+  else
+  begin
+    uName := Trim(FileNameEdit.Text);
+    e := uName <> '';
+    PatchRadioGroup.Visible := VoxelTypeRadioGroup.ItemIndex = 1;
   end;
+  ChooseOtherPalettePanel.Visible := (PatchRadioGroup.ItemIndex = 6) and (PatchRadioGroup.Visible);
   OKButton1.Enabled := e;
+end;
+
+procedure TExportVoxelForm.FileNameEditChange(Sender: TObject);
+begin
+  UpdateEnable;
+  UpdateControls;
 end;
 
 procedure TExportVoxelForm.SelectFileButtonClick(Sender: TObject);
@@ -273,6 +309,7 @@ begin
   if SaveVoxelDialog.Execute then
   begin
     FileNameEdit.Text := SaveVoxelDialog.FileName;
+    FileNameEdit.Hint := SaveVoxelDialog.FileName;
     OKButton1.Enabled := True;
   end;
 end;
@@ -293,12 +330,16 @@ begin
   opt_voxsize := voxsize;
   opt_voxpal := PatchRadioGroup.ItemIndex;
   stringtobigstring(OtherPaletteEdit.Text, @opt_customvoxpal);
+  opt_zipvoxtype := VoxelTypeRadioGroup.ItemIndex;
 end;
 
 procedure TExportVoxelForm.LoadPaletteSpeedButtonClick(Sender: TObject);
 begin
   if OpenPaletteDialog.Execute then
+  begin
     OtherPaletteEdit.Text := OpenPaletteDialog.FileName;
+    OtherPaletteEdit.Hint := OpenPaletteDialog.FileName;
+  end;
 end;
 
 procedure TExportVoxelForm.PatchRadioGroupClick(Sender: TObject);
@@ -307,6 +348,26 @@ begin
   if ChooseOtherPalettePanel.Visible then
     if OtherPaletteEdit.Text = '' then
       LoadPaletteSpeedButtonClick(Sender);
+end;
+
+procedure TExportVoxelForm.PageControl1Change(Sender: TObject);
+begin
+  UpdateEnable;
+end;
+
+procedure TExportVoxelForm.SelectZipFileButtonClick(Sender: TObject);
+begin
+  if SaveZIPDialog.Execute then
+  begin
+    ZipFileNameEdit.Text := SaveZIPDialog.FileName;
+    ZipFileNameEdit.Hint := SaveZIPDialog.FileName;
+    OKButton1.Enabled := True;
+  end;
+end;
+
+procedure TExportVoxelForm.VoxelTypeRadioGroupClick(Sender: TObject);
+begin
+  UpdateEnable;
 end;
 
 end.

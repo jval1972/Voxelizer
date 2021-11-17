@@ -90,6 +90,10 @@ type
 
 function GetIntegerInRange(const val, f1, f2: integer): integer;
 
+function GetNewTempFileName(const name: string): string;
+
+function IntToStrZ3(const x: integer): string;
+
 implementation
 
 uses
@@ -405,4 +409,19 @@ begin
     result := val;
 end;
 
+function GetNewTempFileName(const name: string): string;
+var
+  buf: array[0..4095] of char;
+begin
+  ZeroMemory(@buf, SizeOf(buf));
+  GetTempPath(SizeOf(buf), buf);
+  Result :=  StrPas(buf) + '\' + ExtractFileName(name);
+end;
+
+function IntToStrZ3(const x: integer): string;
+begin
+  Result := IntToStr(x);
+  while Length(Result) < 3 do
+    Result := '0' + Result;
+end;
 end.

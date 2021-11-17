@@ -2916,6 +2916,10 @@ object Form1: TForm1
         Caption = 'Wireframe'
         OnClick = Wireframe1Click
       end
+      object Multithreading1: TMenuItem
+        Caption = 'Multithreading'
+        OnClick = Multithreading1Click
+      end
     end
     object Help1: TMenuItem
       Caption = '&Help'

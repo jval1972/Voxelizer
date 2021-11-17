@@ -57,7 +57,10 @@ uses
   vxl_gltypes in 'vxl_gltypes.pas',
   pcximage in 'pcximage.pas',
   vxl_zipfile in 'vxl_zipfile.pas',
-  vxl_threads in 'vxl_threads.pas';
+  vxl_threads in 'vxl_threads.pas',
+  vxl_multithreading in 'vxl_multithreading.pas',
+  vxl_texture in 'vxl_texture.pas',
+  progressfrm in 'progressfrm.pas' {ProgressForm};
 
 {$R *.res}
 
@@ -65,6 +68,7 @@ begin
   Application.Initialize;
   Application.Title := 'Voxelizer';
   Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TProgressForm, ProgressForm);
   Application.Run;
 end.
 

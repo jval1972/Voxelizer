@@ -30,7 +30,7 @@ unit vxl_voxelizer;
 interface
 
 uses
-  Windows, Classes, SysUtils, Graphics, vxl_voxels;
+  Windows, Classes, SysUtils, Graphics, vxl_voxels, vxl_texture;
 
 type
   meshvertex_t = record
@@ -59,7 +59,7 @@ type
   Ptri3i_tArray = ^tri3i_tArray;
 
 
-procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TBitmap;
+procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TTexture;
   const vox: voxelbuffer_p; const voxsize: integer; const opaque: boolean);
 
 implementation
@@ -134,7 +134,7 @@ begin
   v.v := (v1.v + v2.v) * 0.5;
 end;
 
-procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TBitmap;
+procedure DT_VoxelizeTri(const tri: Pmeshtriangle_t; const tex: TTexture;
   const vox: voxelbuffer_p; const voxsize: integer; const opaque: boolean);
 var
   points: tri3i_t;
@@ -165,7 +165,7 @@ var
           if iv < 0 then
             iv := tex.Height + iv;
           pv := @vox[x, y, z];
-          pv^ := tex.Canvas.Pixels[iu, iv];
+          pv^ := tex.Pixels[iu, iv];
           if opaque then
             if pv^ = 0 then
               pv^ := 1;

@@ -39,17 +39,19 @@ uses
   vxl_voxelizer;
 
 procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
-  const voxsize: integer; const modeltex: TBitmap);
+  const voxsize: integer; const modeltex: TBitmap; const mt: boolean = False);
 
 implementation
 
 uses
-  vxl_defs;
+  vxl_defs,
+  vxl_multithreading,
+  vxl_texture;
 
 procedure DT_CreateVoxelFacesFromModel(const mVertCount, mFaceCount: integer;
-  const mVert: array of fvec5_t; const mFace: array of ivec3_t;
-  const scale: single; const vox: voxelbuffer_p;
-  const voxsize: integer; const tex: TBitmap; const opaque: boolean);
+  const mVert: fvec5_pa; const mFace: ivec3_pa; const scale: single;
+  const vox: voxelbuffer_p; const voxsize: integer; const tex: TTexture;
+  const opaque: boolean);
 var
   tri: meshtriangle_t;
   i: integer;
@@ -73,12 +75,66 @@ begin
   end;
 end;
 
+type
+  th_createvoxelparams_t = record
+    mVertCount, mFaceCount: integer;
+    mVert: fvec5_pa;
+    mFace: ivec3_pa;
+    scale: single;
+    vox: voxelbuffer_p;
+    voxsize: integer;
+    tex: TTexture;
+    opaque: boolean;
+  end;
+  th_createvoxelparams_p = ^th_createvoxelparams_t;
+
+procedure DT_CreateVoxelFacesFromModelMT(const idx, numidxs: integer;
+  const mVertCount, mFaceCount: integer;
+  const mVert: fvec5_pa; const mFace: ivec3_pa; const scale: single;
+  const vox: voxelbuffer_p; const voxsize: integer; const tex: TTexture;
+  const opaque: boolean);
+var
+  tri: meshtriangle_t;
+  i: integer;
+  ofs: integer;
+  procedure _make_vertex(const r, g: integer);
+  begin
+    tri[g].x := mVert[r].x * scale + ofs;
+    tri[g].y := voxsize - 1.0 - mVert[r].y * scale;
+    tri[g].z := voxsize - 1.0 - mVert[r].z * scale - ofs;
+    tri[g].u := mVert[r].u;
+    tri[g].v := mVert[r].v;
+  end;
+begin
+  ofs := voxsize div 2;
+  for i := 0 to mFaceCount - 1 do
+    if i mod numidxs = idx then
+    begin
+      _make_vertex(mFace[i].x, 0);
+      _make_vertex(mFace[i].y, 1);
+      _make_vertex(mFace[i].z, 2);
+      DT_VoxelizeTri(@tri, tex, vox, voxsize, opaque);
+    end;
+end;
+
+function DT_CreateVoxelFacesFromModel_thr(p: iterator_p): integer; stdcall;
+var
+  parms: th_createvoxelparams_p;
+begin
+  parms := p.data;
+  DT_CreateVoxelFacesFromModelMT(p.idx, p.numidxs, parms.mVertCount, parms.mFaceCount,
+    parms.mVert, parms.mFace, parms.scale, parms.vox, parms.voxsize, parms.tex, parms.opaque);
+  Result := 0;
+end;
+
 procedure DT_CreateVoxelFromModel(const t: model_t; const vox: voxelbuffer_p;
-  const voxsize: integer; const modeltex: TBitmap);
+  const voxsize: integer; const modeltex: TBitmap; const mt: boolean = False);
 var
   xmin, xmax, ymin, ymax, zmin, zmax: single;
   i: integer;
   scale: single;
+  cvparms: th_createvoxelparams_t;
+  tex: TTexture;
 begin
   if t.mVertCount = 0 then
     Exit;
@@ -126,8 +182,24 @@ begin
 
   scale := (voxsize - 1) / scale;
 
-  DT_CreateVoxelFacesFromModel(t.mVertCount, t.mFaceCount, t.mVert, t.mFace,
-    scale, vox, voxsize, modeltex, true);
+  tex := TTexture.Create(modeltex);
+  if mt then
+  begin
+    cvparms.mVertCount := t.mVertCount;
+    cvparms.mFaceCount := t.mFaceCount;
+    cvparms.mVert := t.mVert;
+    cvparms.mFace := t.mFace;
+    cvparms.scale := scale;
+    cvparms.vox := vox;
+    cvparms.voxsize := voxsize;
+    cvparms.tex := tex;
+    cvparms.opaque := true;
+    MT_Iterate(@DT_CreateVoxelFacesFromModel_thr, @cvparms);
+  end
+  else
+    DT_CreateVoxelFacesFromModel(t.mVertCount, t.mFaceCount, t.mVert, t.mFace,
+      scale, vox, voxsize, tex, true);
+  tex.Free;
 end;
 
 end.

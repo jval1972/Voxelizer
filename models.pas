@@ -50,8 +50,8 @@ type
     mVertCount: integer;
     mFaceCount: integer;
 
-    mVert: array of fvec5_t;
-    mFace: array of ivec3_t;
+    mVert: fvec5_pa;
+    mFace: ivec3_pa;
 
     mFrame: Integer;
     constructor Create; virtual;
@@ -67,8 +67,8 @@ implementation
 
 constructor model_t.Create;
 begin
-  SetLength(mVert, 0);
-  SetLength(mFace, 0);
+  mVert := nil;
+  mFace := nil;
 
   mVertCount := 0;
   mFaceCount := 0;
@@ -77,8 +77,8 @@ end;
 
 destructor model_t.Destroy;
 begin
-  SetLength(mVert, 0);
-  SetLength(mFace, 0);
+  ReallocMem(mVert, 0);
+  ReallocMem(mFace, 0);
 end;
 
 const
@@ -99,7 +99,7 @@ begin
 
   Result := mVertCount;
   inc(mVertCount);
-  SetLength(mVert, mVertCount);
+  ReallocMem(mVert, mVertCount * SizeOf(fvec5_t));
   mVert[Result].x := x;
   mVert[Result].y := y;
   mVert[Result].z := z;
@@ -111,7 +111,7 @@ function model_t.AddFace(const f1, f2, f3: integer): integer;
 begin
   Result := mFaceCount;
   inc(mFaceCount);
-  SetLength(mFace, mFaceCount);
+  ReallocMem(mFace, mFaceCount * SizeOf(ivec3_t));
   mFace[Result].x := f1;
   mFace[Result].y := f2;
   mFace[Result].z := f3;
@@ -119,8 +119,8 @@ end;
 
 procedure model_t.init;
 begin
-  SetLength(mVert, 0);
-  SetLength(mFace, 0);
+  ReallocMem(mVert, 0);
+  ReallocMem(mFace, 0);
 
   mVertCount := 0;
   mFaceCount := 0;

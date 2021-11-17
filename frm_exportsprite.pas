@@ -114,7 +114,7 @@ type
     fdevicewidth, fdeviceheight: integer;
     fviewdist, ftheta, ftheta2: float;
     procedure RenderFaces(const mVertCount, mFaceCount: integer;
-      const mVert: array of fvec5_t; const mFace: array of ivec3_t; const tex: TBitmap);
+      const mVert: fvec5_pa; const mFace: ivec3_pa; const tex: TBitmap);
     procedure DoUpdate3d;
     procedure UpdateControls;
     function CheckOKtoGO: boolean;
@@ -260,7 +260,7 @@ begin
 end;
 
 procedure TExportSpriteForm.RenderFaces(const mVertCount, mFaceCount: integer;
-  const mVert: array of fvec5_t; const mFace: array of ivec3_t; const tex: TBitmap);
+  const mVert: fvec5_pa; const mFace: ivec3_pa; const tex: TBitmap);
 var
   v1, v2, v3: vertex_t;
   i: integer;

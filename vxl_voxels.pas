@@ -57,7 +57,10 @@ procedure vox_shrinkyaxis(const buf: voxelbuffer_p; const size: integer;
 procedure vox_removenonvisiblecells(const buf: voxelbuffer_p; const size: integer);
 
 procedure VXE_ExportVoxelToSlab6VOX(const voxelbuffer: voxelbuffer_p; const voxelsize: Integer;
-  const palarray: PByteArray; const fname: string);
+  const palarray: PByteArray; const fname: string; const buf: pointer = nil); overload;
+
+procedure VXE_ExportVoxelToSlab6VOX(const voxelbuffer: voxelbuffer_p; const voxelsize: Integer;
+  const palarray: PByteArray; const strm: TStream; const buf: pointer = nil); overload;
 
 procedure VXE_ExportVoxelToDDVOX(const voxelbuffer: voxelbuffer_p; const voxelsize: Integer;
   const fname: string);
@@ -301,7 +304,7 @@ begin
 end;
 
 procedure VXE_ExportVoxelToSlab6VOX(const voxelbuffer: voxelbuffer_p; const voxelsize: Integer;
-  const palarray: PByteArray; const fname: string);
+  const palarray: PByteArray; const fname: string; const buf: pointer = nil);
 var
   i: integer;
   fvoxelsize: Integer;
@@ -330,7 +333,10 @@ begin
     fvoxelsize := voxelsize;
   end;
   voxsize := fvoxelsize * fvoxelsize * fvoxelsize;
-  GetMem(voxdata, voxsize);
+  if buf = nil then
+    GetMem(voxdata, voxsize)
+  else
+    voxdata := buf;
 
   for i := 0 to 255 do
     vpal[i] := 0;
@@ -366,7 +372,77 @@ begin
     fs.Free;
   end;
 
-  FreeMem(voxdata, voxsize);
+  if buf = nil then
+    FreeMem(voxdata, voxsize);
+end;
+
+procedure VXE_ExportVoxelToSlab6VOX(const voxelbuffer: voxelbuffer_p; const voxelsize: Integer;
+  const palarray: PByteArray; const strm: TStream; const buf: pointer = nil); overload;
+var
+  i: integer;
+  fvoxelsize: Integer;
+  x, y, z: integer;
+  x1, x2, y1, y2, z1, z2: integer;
+  voxdata: PByteArray;
+  voxsize: integer;
+  dpal: array[0..767] of byte;
+  vpal: array[0..255] of LongWord;
+  c: LongWord;
+begin
+  if voxelsize >= 256 then
+  begin
+    x1 := 1; x2 := 255;
+    y1 := 1; y2 := 255;
+    z1 := 1; z2 := 255;
+    fvoxelsize := 255
+  end
+  else
+  begin
+    x1 := 0; x2 := voxelsize - 1;
+    y1 := 0; y2 := voxelsize - 1;
+    z1 := 0; z2 := voxelsize - 1;
+    fvoxelsize := voxelsize;
+  end;
+  voxsize := fvoxelsize * fvoxelsize * fvoxelsize;
+  if buf = nil then
+    GetMem(voxdata, voxsize)
+  else
+    voxdata := buf;
+
+  for i := 0 to 255 do
+    vpal[i] := 0;
+
+  for i := 0 to 764 do
+    dpal[i] := palarray[i + 3];
+  for i := 765 to 767 do
+    dpal[i] := 0;
+  for i := 0 to 254 do
+    vpal[i] := RGB(dpal[3 * i], dpal[3 * i + 1], dpal[3 * i + 2]);
+
+  strm.Position := 0;
+
+  for i := 0 to 2 do
+    strm.Write(fvoxelsize, SizeOf(integer));
+  i := 0;
+  for x := x1 to x2 do
+    for y := y1 to y2 do
+      for z := z1 to z2 do
+      begin
+        c := voxelbuffer[x, z, fvoxelsize - 1 - y];
+        if c = 0 then
+          voxdata[i] := 255
+        else
+          voxdata[i] := DT_FindAproxColorIndex(@vpal, c, 0, 254);
+        inc(i);
+      end;
+  strm.Write(voxdata^, voxsize);
+  for i := 0 to 767 do
+    dpal[i] := dpal[i] div 4;
+  strm.Write(dpal, 768);
+  strm.Size := strm.Position;
+
+  if buf = nil then
+    FreeMem(voxdata, voxsize);
 end;
 
 procedure VXE_ExportVoxelToDDVOX(const voxelbuffer: voxelbuffer_p; const voxelsize: Integer;

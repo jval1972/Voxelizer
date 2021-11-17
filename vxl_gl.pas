@@ -249,7 +249,7 @@ begin
 end;
 
 procedure glRenderFaces(const mVertCount, mFaceCount: integer;
-  const mVert: array of fvec5_t; const mFace: array of ivec3_t);
+  const mVert: fvec5_pa; const mFace: ivec3_pa);
 var
   i: integer;
   procedure _render_rover(const r: integer);

@@ -43,6 +43,7 @@ const
 var
   opt_renderevniroment: Boolean = True;
   opt_renderwireframe: Boolean = False;
+  opt_multithreading: Boolean = False;
   opt_filemenuhistory0: bigstring_t;
   opt_filemenuhistory1: bigstring_t;
   opt_filemenuhistory2: bigstring_t;
@@ -64,6 +65,7 @@ var
   opt_voxsize: integer = 128;
   opt_voxpal: integer = 0;
   opt_customvoxpal: bigstring_t;
+  opt_zipvoxtype: integer;
 
 function bigstringtostring(const bs: bigstring_p): string;
 
@@ -84,7 +86,7 @@ type
   end;
 
 const
-  NUMSETTINGS = 27;
+  NUMSETTINGS = 29;
 
 var
   Settings: array[0..NUMSETTINGS - 1] of TSettingItem = (
@@ -222,6 +224,16 @@ var
       desc: 'CUSTOMVOXELPALETTE';
       typeof: tstBigString;
       location: @opt_customvoxpal;
+    ),
+    (
+      desc: 'ZIPVOXELTYPE';
+      typeof: tstInteger;
+      location: @opt_zipvoxtype;
+    ),
+    (
+      desc: 'MULTITHREADING';
+      typeof: tstBoolean;
+      location: @opt_multithreading;
     )
   );
 

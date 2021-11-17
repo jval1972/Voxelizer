@@ -97,6 +97,7 @@ type
     ExportSpriteSpeedButton: TSpeedButton;
     ExportVoxelSpeedButton: TSpeedButton;
     NumFramesLabel: TLabel;
+    Multithreading1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure NewButton1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -132,6 +133,7 @@ type
     procedure Sprite1Click(Sender: TObject);
     procedure Voxel1Click(Sender: TObject);
     procedure ApplicationEvents1Activate(Sender: TObject);
+    procedure Multithreading1Click(Sender: TObject);
   private
     { Private declarations }
     ffilename: string;
@@ -164,12 +166,16 @@ var
 implementation
 
 uses
+  progressfrm,
   vxl_gl,
   vxl_defs,
   vxl_utils,
   vxl_voxels,
   vxl_palettes,
   vxl_md2model,
+  vxl_zipfile,
+  vxl_voxelexport,
+  vxl_multithreading,
   frm_exportsprite,
   frm_exportvoxel;
 
@@ -185,6 +191,8 @@ var
   doCreate: boolean;
   sdir: string;
 begin
+  MT_Init;
+
   Randomize;
 
   DecimalSeparator := '.';
@@ -380,6 +388,8 @@ begin
   filemenuhistory.Free;
 
   model.Free;
+
+  MT_ShutDown;
 end;
 
 procedure TForm1.AboutButton1Click(Sender: TObject);
@@ -654,6 +664,7 @@ procedure TForm1.Options1Click(Sender: TObject);
 begin
   Renderenviroment1.Checked := opt_renderevniroment;
   Wireframe1.Checked := opt_renderwireframe;
+  Multithreading1.Checked := opt_multithreading;
 end;
 
 procedure TForm1.Wireframe1Click(Sender: TObject);
@@ -830,6 +841,57 @@ var
   sz: integer;
   modeltex: TBitmap;
   f: TExportVoxelForm;
+  pk3: TZipFile;
+  tmpname: string;
+  i: integer;
+  md2: TMD2Model;
+  tmpmodel: model_t;
+  bytes: string;
+  tmpbuf: pointer;
+  ms: TMemoryStream;
+
+  function AddFileToPK3(const entryname, datafilename: string): boolean;
+  var
+    idx: integer;
+    m: TMemoryStream;
+    pB: PByteArray;
+  begin
+    if pk3 <> nil then
+    begin
+      m := TMemoryStream.Create;
+      m.LoadFromFile(datafilename);
+      idx := pk3.AddFile(entryname);
+      SetLength(bytes, m.Size);
+      pB := m.Memory;
+      Move(pb^, bytes[1], m.Size);
+      pk3.Data[idx] := bytes;
+      pk3.DateTime[idx] := Now();
+      m.Free;
+      Result := True;
+    end
+    else
+      Result := False;
+  end;
+
+  function AddStreamToPK3(const entryname: string; const strm: TMemoryStream): boolean;
+  var
+    idx: integer;
+    pB: PByteArray;
+  begin
+    if pk3 <> nil then
+    begin
+      idx := pk3.AddFile(entryname);
+      SetLength(bytes, strm.Size);
+      pB := strm.Memory;
+      Move(pb^, bytes[1], strm.Size);
+      pk3.Data[idx] := bytes;
+      pk3.DateTime[idx] := Now();
+      Result := True;
+    end
+    else
+      Result := False;
+  end;
+
 begin
   GetMem(buf, SizeOf(voxelbuffer_t));
   Screen.Cursor := crHourglass;
@@ -845,24 +907,90 @@ begin
       f.ShowModal;
       if f.ModalResult = mrOK then
       begin
-        ename := f.FileNameEdit.Text;
-        sz := f.voxsize;
-        vox_typ := UpperCase(ExtractFileExt(ename));
-        if vox_typ = '.VOX' then
-        begin
-          case f.PatchRadioGroup.ItemIndex of
-          0: VXE_ExportVoxelToSlab6VOX(buf, sz, @DoomPaletteRaw, ename);
-          1: VXE_ExportVoxelToSlab6VOX(buf, sz, @HereticPaletteRaw, ename);
-          2: VXE_ExportVoxelToSlab6VOX(buf, sz, @HexenPaletteRaw, ename);
-          3: VXE_ExportVoxelToSlab6VOX(buf, sz, @StrifePaletteRaw, ename);
-          4: VXE_ExportVoxelToSlab6VOX(buf, sz, @RadixPaletteRaw, ename);
-          5: VXE_ExportVoxelToSlab6VOX(buf, sz, @GLSpeedPaletteRaw, ename);
+        Screen.Cursor := crHourGlass;
+        try
+          sz := f.voxsize;
+          if f.PageControl1.ActivePageIndex = 0 then
+          begin
+            // Single frame
+            ename := f.FileNameEdit.Text;
+            vox_typ := UpperCase(ExtractFileExt(ename));
+            if vox_typ = '.VOX' then
+            begin
+              case f.PatchRadioGroup.ItemIndex of
+              0: VXE_ExportVoxelToSlab6VOX(buf, sz, @DoomPaletteRaw, ename);
+              1: VXE_ExportVoxelToSlab6VOX(buf, sz, @HereticPaletteRaw, ename);
+              2: VXE_ExportVoxelToSlab6VOX(buf, sz, @HexenPaletteRaw, ename);
+              3: VXE_ExportVoxelToSlab6VOX(buf, sz, @StrifePaletteRaw, ename);
+              4: VXE_ExportVoxelToSlab6VOX(buf, sz, @RadixPaletteRaw, ename);
+              5: VXE_ExportVoxelToSlab6VOX(buf, sz, @GLSpeedPaletteRaw, ename);
+              else
+                 VXE_ExportVoxelToSlab6VOX(buf, sz, PByteArray(GetPaletteFromName(f.OtherPaletteEdit.Text)), ename);
+              end;
+            end
+            else
+              VXE_ExportVoxelToDDVOX(buf, sz, ename);
+          end
           else
-             VXE_ExportVoxelToSlab6VOX(buf, sz, PByteArray(GetPaletteFromName(f.OtherPaletteEdit.Text)), ename);
+          begin
+            // All frames
+            pk3 := TZipFile.Create;
+            if FileExists(ffilename) then
+            begin
+              md2 := TMD2Model.Create(ffilename);
+              ProgressStart('Exporting all frames', md2.GetNumFrames + 1);
+              try
+                tmpmodel := model_t.Create;
+                GetMem(tmpbuf, 256 * 256 * 256);
+                ms := TMemoryStream.Create;
+                tmpname := '';
+                for i := 0 to md2.GetNumFrames - 1 do
+                begin
+                  ProgressStep;
+                  tmpmodel.init;
+                  tmpmodel.mFrame := i;
+                  md2.DrawFrameToModel(tmpmodel, tmpmodel.mFrame);
+                  DT_CreateVoxelFromModel(tmpmodel, buf, sz, modeltex, opt_multithreading);
+                  if f.VoxelTypeRadioGroup.ItemIndex = 0 then // DDVOX
+                  begin
+                    ename := IntToStrZ3(i) + '.DDVOX';
+                    tmpname := GetNewTempFileName(ename);
+                    if FileExists(tmpname) then
+                      DeleteFile(tmpname);
+                    VXE_ExportVoxelToDDVOX(buf, sz, tmpname);
+                    AddFileToPK3(ename, tmpname);
+                    DeleteFile(tmpname);
+                  end
+                  else
+                  begin
+                    ename := IntToStrZ3(i) + '.VOX';
+                    case f.PatchRadioGroup.ItemIndex of
+                    0: VXE_ExportVoxelToSlab6VOX(buf, sz, @DoomPaletteRaw, ms, tmpbuf);
+                    1: VXE_ExportVoxelToSlab6VOX(buf, sz, @HereticPaletteRaw, ms, tmpbuf);
+                    2: VXE_ExportVoxelToSlab6VOX(buf, sz, @HexenPaletteRaw, ms, tmpbuf);
+                    3: VXE_ExportVoxelToSlab6VOX(buf, sz, @StrifePaletteRaw, ms, tmpbuf);
+                    4: VXE_ExportVoxelToSlab6VOX(buf, sz, @RadixPaletteRaw, ms, tmpbuf);
+                    5: VXE_ExportVoxelToSlab6VOX(buf, sz, @GLSpeedPaletteRaw, ms, tmpbuf);
+                    else
+                       VXE_ExportVoxelToSlab6VOX(buf, sz, PByteArray(GetPaletteFromName(f.OtherPaletteEdit.Text)), ms, tmpbuf);
+                    end;
+                    AddStreamToPK3(ename, ms);
+                  end;
+                end;
+                ms.Free;
+                FreeMem(tmpbuf);
+                tmpmodel.Free;
+              finally
+                ProgressStop;
+              end;
+              md2.Free;
+            end;
+            pk3.SaveToFile(f.ZIPFileNameEdit.Text);
+            pk3.Free;
           end;
-        end
-        else
-          VXE_ExportVoxelToDDVOX(buf, sz, ename);
+        finally
+          Screen.Cursor := crDefault;
+        end;
       end;
       modeltex.Free;
     finally
@@ -877,6 +1005,11 @@ end;
 procedure TForm1.ApplicationEvents1Activate(Sender: TObject);
 begin
   glneedsupdate := True;
+end;
+
+procedure TForm1.Multithreading1Click(Sender: TObject);
+begin
+  opt_multithreading := not opt_multithreading;
 end;
 
 end.

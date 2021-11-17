@@ -3,7 +3,7 @@ object ExportVoxelForm: TExportVoxelForm
   Top = 145
   BorderStyle = bsDialog
   Caption = 'Export Voxel'
-  ClientHeight = 476
+  ClientHeight = 544
   ClientWidth = 574
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -1052,7 +1052,7 @@ object ExportVoxelForm: TExportVoxelForm
   TextHeight = 13
   object BottomPanel: TPanel
     Left = 0
-    Top = 435
+    Top = 503
     Width = 574
     Height = 41
     Align = alBottom
@@ -1094,20 +1094,28 @@ object ExportVoxelForm: TExportVoxelForm
     Left = 0
     Top = 0
     Width = 574
-    Height = 435
+    Height = 503
     Align = alClient
     Caption = ' '
     TabOrder = 1
+    object Bevel2: TBevel
+      Left = 1
+      Top = 1
+      Width = 572
+      Height = 8
+      Align = alTop
+      Shape = bsTopLine
+    end
     object PreviewGroupBox: TGroupBox
       Left = 240
-      Top = 64
+      Top = 136
       Width = 305
       Height = 345
       Caption = ' Preview '
       TabOrder = 1
       object Image1: TImage
         Left = 25
-        Top = 73
+        Top = 65
         Width = 256
         Height = 256
         Picture.Data = {
@@ -2143,8 +2151,8 @@ object ExportVoxelForm: TExportVoxelForm
       end
       object frontSpeedButton: TSpeedButton
         Left = 24
-        Top = 40
-        Width = 41
+        Top = 32
+        Width = 42
         Height = 22
         GroupIndex = 1
         Down = True
@@ -2153,9 +2161,9 @@ object ExportVoxelForm: TExportVoxelForm
         OnClick = SpeedButtonClick
       end
       object backSpeedButton: TSpeedButton
-        Left = 64
-        Top = 40
-        Width = 41
+        Left = 65
+        Top = 32
+        Width = 42
         Height = 22
         GroupIndex = 1
         Caption = 'Back'
@@ -2163,9 +2171,9 @@ object ExportVoxelForm: TExportVoxelForm
         OnClick = SpeedButtonClick
       end
       object leftSpeedButton: TSpeedButton
-        Left = 104
-        Top = 40
-        Width = 41
+        Left = 106
+        Top = 32
+        Width = 42
         Height = 22
         GroupIndex = 1
         Caption = 'Left'
@@ -2173,9 +2181,9 @@ object ExportVoxelForm: TExportVoxelForm
         OnClick = SpeedButtonClick
       end
       object rightSpeedButton: TSpeedButton
-        Left = 144
-        Top = 40
-        Width = 41
+        Left = 147
+        Top = 32
+        Width = 42
         Height = 22
         GroupIndex = 1
         Caption = 'Right'
@@ -2183,9 +2191,9 @@ object ExportVoxelForm: TExportVoxelForm
         OnClick = SpeedButtonClick
       end
       object topSpeedButton: TSpeedButton
-        Left = 184
-        Top = 40
-        Width = 41
+        Left = 188
+        Top = 32
+        Width = 42
         Height = 22
         GroupIndex = 1
         Caption = 'Top'
@@ -2193,9 +2201,9 @@ object ExportVoxelForm: TExportVoxelForm
         OnClick = SpeedButtonClick
       end
       object bottomSpeedButton: TSpeedButton
-        Left = 224
-        Top = 40
-        Width = 41
+        Left = 229
+        Top = 32
+        Width = 42
         Height = 22
         GroupIndex = 1
         Caption = 'Bottom'
@@ -2203,55 +2211,9 @@ object ExportVoxelForm: TExportVoxelForm
         OnClick = SpeedButtonClick
       end
     end
-    object Panel1: TPanel
-      Left = 1
-      Top = 1
-      Width = 572
-      Height = 41
-      Align = alTop
-      Caption = ' '
-      TabOrder = 2
-      TabStop = True
-      object Bevel2: TBevel
-        Left = 1
-        Top = 1
-        Width = 570
-        Height = 15
-        Align = alTop
-        Shape = bsTopLine
-      end
-      object Label3: TLabel
-        Left = 16
-        Top = 12
-        Width = 22
-        Height = 13
-        Caption = 'File: '
-        FocusControl = FileNameEdit
-      end
-      object SelectFileButton: TSpeedButton
-        Left = 472
-        Top = 11
-        Width = 23
-        Height = 22
-        Hint = 'Select output Voxel file'
-        Caption = '...'
-        Flat = True
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = SelectFileButtonClick
-      end
-      object FileNameEdit: TEdit
-        Left = 56
-        Top = 12
-        Width = 417
-        Height = 21
-        TabOrder = 0
-        OnChange = FileNameEditChange
-      end
-    end
     object SizeRadioGroup: TRadioGroup
       Left = 24
-      Top = 64
+      Top = 136
       Width = 193
       Height = 97
       Caption = ' Size '
@@ -2267,7 +2229,7 @@ object ExportVoxelForm: TExportVoxelForm
     end
     object PatchRadioGroup: TRadioGroup
       Left = 24
-      Top = 184
+      Top = 256
       Width = 193
       Height = 137
       Caption = ' Palette '
@@ -2281,18 +2243,18 @@ object ExportVoxelForm: TExportVoxelForm
         'Radix'
         'GLSpeed'
         'Other...')
-      TabOrder = 3
+      TabOrder = 2
       Visible = False
       OnClick = PatchRadioGroupClick
     end
     object ChooseOtherPalettePanel: TPanel
       Left = 104
-      Top = 288
+      Top = 360
       Width = 105
       Height = 25
       BevelOuter = bvNone
       Caption = ' '
-      TabOrder = 4
+      TabOrder = 3
       Visible = False
       object LoadPaletteSpeedButton: TSpeedButton
         Left = 80
@@ -2313,6 +2275,114 @@ object ExportVoxelForm: TExportVoxelForm
         TabOrder = 0
       end
     end
+    object PageControl1: TPageControl
+      Left = 1
+      Top = 9
+      Width = 572
+      Height = 120
+      ActivePage = TabSheet2
+      Align = alTop
+      Style = tsFlatButtons
+      TabOrder = 4
+      OnChange = PageControl1Change
+      object TabSheet1: TTabSheet
+        Caption = 'Current frame'
+        object Panel1: TPanel
+          Left = 0
+          Top = 0
+          Width = 564
+          Height = 41
+          Align = alTop
+          Caption = ' '
+          TabOrder = 0
+          TabStop = True
+          object Label3: TLabel
+            Left = 16
+            Top = 12
+            Width = 22
+            Height = 13
+            Caption = 'File: '
+            FocusControl = FileNameEdit
+          end
+          object SelectFileButton: TSpeedButton
+            Left = 520
+            Top = 11
+            Width = 23
+            Height = 22
+            Hint = 'Select output Voxel file'
+            Caption = '...'
+            Flat = True
+            ParentShowHint = False
+            ShowHint = True
+            OnClick = SelectFileButtonClick
+          end
+          object FileNameEdit: TEdit
+            Left = 56
+            Top = 12
+            Width = 465
+            Height = 21
+            TabOrder = 0
+            OnChange = FileNameEditChange
+          end
+        end
+      end
+      object TabSheet2: TTabSheet
+        Caption = 'All frames'
+        ImageIndex = 1
+        object Panel2: TPanel
+          Left = 0
+          Top = 0
+          Width = 564
+          Height = 41
+          Align = alTop
+          Caption = ' '
+          TabOrder = 0
+          TabStop = True
+          object Label1: TLabel
+            Left = 16
+            Top = 12
+            Width = 22
+            Height = 13
+            Caption = 'File: '
+            FocusControl = ZIPFileNameEdit
+          end
+          object SelectZipFileButton: TSpeedButton
+            Left = 520
+            Top = 11
+            Width = 23
+            Height = 22
+            Hint = 'Select output ZIP file'
+            Caption = '...'
+            Flat = True
+            ParentShowHint = False
+            ShowHint = True
+            OnClick = SelectZipFileButtonClick
+          end
+          object ZIPFileNameEdit: TEdit
+            Left = 56
+            Top = 12
+            Width = 465
+            Height = 21
+            TabOrder = 0
+            OnChange = FileNameEditChange
+          end
+        end
+        object VoxelTypeRadioGroup: TRadioGroup
+          Left = 16
+          Top = 48
+          Width = 281
+          Height = 40
+          Caption = ' Voxel Format '
+          Columns = 2
+          ItemIndex = 0
+          Items.Strings = (
+            'DDVOX (DelphiDoom)'
+            'VOX (sLab6)')
+          TabOrder = 1
+          OnClick = VoxelTypeRadioGroupClick
+        end
+      end
+    end
   end
   object SaveVoxelDialog: TSaveDialog
     DefaultExt = 'ddvox'
@@ -2327,5 +2397,12 @@ object ExportVoxelForm: TExportVoxelForm
     Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
     Left = 137
     Top = 368
+  end
+  object SaveZIPDialog: TSaveDialog
+    DefaultExt = 'zip'
+    Filter = 'Zip Files (*.zip)|*.zip|PK3 Files (*.pk3)|*.pk3'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Left = 465
+    Top = 48
   end
 end
