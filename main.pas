@@ -855,8 +855,10 @@ begin
           1: VXE_ExportVoxelToSlab6VOX(buf, sz, @HereticPaletteRaw, ename);
           2: VXE_ExportVoxelToSlab6VOX(buf, sz, @HexenPaletteRaw, ename);
           3: VXE_ExportVoxelToSlab6VOX(buf, sz, @StrifePaletteRaw, ename);
+          4: VXE_ExportVoxelToSlab6VOX(buf, sz, @RadixPaletteRaw, ename);
+          5: VXE_ExportVoxelToSlab6VOX(buf, sz, @GLSpeedPaletteRaw, ename);
           else
-            VXE_ExportVoxelToSlab6VOX(buf, sz, @RadixPaletteRaw, ename);
+             VXE_ExportVoxelToSlab6VOX(buf, sz, PByteArray(GetPaletteFromName(f.OtherPaletteEdit.Text)), ename);
           end;
         end
         else

@@ -35,50 +35,55 @@ uses
 
 type
   TExportSpriteForm = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Button1: TButton;
+    Button2: TButton;
+    Panel3: TPanel;
     Label1: TLabel;
-    FileNameEdit: TEdit;
     SelectFileButton: TSpeedButton;
+    Label5: TLabel;
+    FileNameEdit: TEdit;
     GeneralGroupBox: TGroupBox;
     Label2: TLabel;
     SpritePrefixButton: TSpeedButton;
     PrefixEdit: TEdit;
     PatchRadioGroup: TRadioGroup;
     PreviewGroupBox: TGroupBox;
-    Panel3: TPanel;
-    PaintBox1: TPaintBox;
     Panel4: TPanel;
+    PaintBox1: TPaintBox;
+    Theta2IncButton1: TSpeedButton;
+    Theta2DecButton1: TSpeedButton;
+    Panel5: TPanel;
     ZoomInSpeedButton: TSpeedButton;
     ZoomOutSpeedButton: TSpeedButton;
     HourglassLabel: TLabel;
-    Panel1: TPanel;
-    Panel2: TPanel;
-    Button1: TButton;
-    Button2: TButton;
-    SaveDialog1: TSaveDialog;
     ZoomTrackBar: TTrackBar;
     RotateTrackBar: TTrackBar;
-    Theta2IncButton1: TSpeedButton;
-    Theta2DecButton1: TSpeedButton;
     ScriptParametersGroupBox: TGroupBox;
-    ScriptRadioGroup: TRadioGroup;
     Label3: TLabel;
-    ActorNameEdit: TEdit;
     Label4: TLabel;
-    EditorNumberEdit: TEdit;
-    Label5: TLabel;
     Label6: TLabel;
-    RadiusEdit: TEdit;
     HeightLabel: TLabel;
+    ActorNameEdit: TEdit;
+    EditorNumberEdit: TEdit;
+    RadiusEdit: TEdit;
     HeightEdit: TEdit;
-    Timer1: TTimer;
+    SolidCheckBox: TCheckBox;
+    ScriptRadioGroup: TRadioGroup;
     VoxelGroupBox: TGroupBox;
     GenerateVoxelCheckBox: TCheckBox;
     voxRadioButton64x64: TRadioButton;
     voxRadioButton128x128: TRadioButton;
     voxRadioButton256x256: TRadioButton;
-    SolidCheckBox: TCheckBox;
     AutoVoxSizeRadioButton: TRadioButton;
     RotationsRadioGroup: TRadioGroup;
+    SaveDialog1: TSaveDialog;
+    Timer1: TTimer;
+    OpenPaletteDialog: TOpenDialog;
+    ChooseOtherPalettePanel: TPanel;
+    LoadPaletteSpeedButton: TSpeedButton;
+    OtherPaletteEdit: TEdit;
     procedure SpritePrefixButtonClick(Sender: TObject);
     procedure SelectFileButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -99,6 +104,8 @@ type
     procedure voxRadioButton128x128Click(Sender: TObject);
     procedure voxRadioButton256x256Click(Sender: TObject);
     procedure AutoVoxSizeRadioButtonClick(Sender: TObject);
+    procedure LoadPaletteSpeedButtonClick(Sender: TObject);
+    procedure PatchRadioGroupClick(Sender: TObject);
   private
     { Private declarations }
     needs3dupdate: boolean;
@@ -204,8 +211,10 @@ begin
   else if ftheta2 > PI / 8 then
     ftheta2 := PI / 8;
 
-  if opt_spritepal in [0..4] then
+  if opt_spritepal in [0..6] then
     PatchRadioGroup.ItemIndex := opt_spritepal;
+  ChooseOtherPalettePanel.Visible := PatchRadioGroup.ItemIndex = 6;
+  OtherPaletteEdit.Text := bigstringtostring(@opt_customspritepal);
 
   if opt_spritescript in [0..2] then
     ScriptRadioGroup.ItemIndex := opt_spritescript;
@@ -229,6 +238,7 @@ begin
   opt_theta1 := Round(ftheta * OPT_TO_FLOAT);
   opt_theta2 := Round(ftheta2 * OPT_TO_FLOAT);
   opt_spritepal := PatchRadioGroup.ItemIndex;
+  stringtobigstring(OtherPaletteEdit.Text, @opt_customspritepal);
   opt_spritescript := ScriptRadioGroup.ItemIndex;
   if GenerateVoxelCheckBox.Checked then
     opt_dospritevox := 1
@@ -420,6 +430,7 @@ end;
 procedure TExportSpriteForm.Timer1Timer(Sender: TObject);
 begin
   Button1.Enabled := CheckOKtoGO;
+  ChooseOtherPalettePanel.Visible := PatchRadioGroup.ItemIndex = 6;
 end;
 
 procedure TExportSpriteForm.CheckNumericEdit(Sender: TObject;
@@ -617,8 +628,10 @@ begin
         1: ms := BmpAsPatch(b, @HereticPaletteRaw);
         2: ms := BmpAsPatch(b, @HexenPaletteRaw);
         3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+        4: ms := BmpAsPatch(b, @RadixPaletteRaw);
+        5: ms := BmpAsPatch(b, @GLSpeedPaletteRaw);
         else
-            ms := BmpAsPatch(b, @RadixPaletteRaw);
+           ms := BmpAsPatch(b, PByteArray(GetPaletteFromName(OtherPaletteEdit.Text)));
         end;
         wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
         ms.Free;
@@ -639,8 +652,10 @@ begin
           1: ms := BmpAsPatch(b, @HereticPaletteRaw);
           2: ms := BmpAsPatch(b, @HexenPaletteRaw);
           3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+          4: ms := BmpAsPatch(b, @RadixPaletteRaw);
+          5: ms := BmpAsPatch(b, @GLSpeedPaletteRaw);
           else
-              ms := BmpAsPatch(b, @RadixPaletteRaw);
+             ms := BmpAsPatch(b, PByteArray(GetPaletteFromName(OtherPaletteEdit.Text)));
           end;
           wad.AddData(PrefixEdit.Text + ROTATIONCHARS[rotchars[rot] + 1], ms.Memory, ms.Size);
           ms.Free;
@@ -700,8 +715,10 @@ begin
           1: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HereticPaletteRaw, 'vxtmp');
           2: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @HexenPaletteRaw, 'vxtmp');
           3: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @StrifePaletteRaw, 'vxtmp');
+          4: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @RadixPaletteRaw, 'vxtmp');
+          5: VXE_ExportVoxelToSlab6VOX(vox, voxsize, @GLSpeedPaletteRaw, 'vxtmp');
           else
-            VXE_ExportVoxelToSlab6VOX(vox, voxsize, @RadixPaletteRaw, 'vxtmp');
+             VXE_ExportVoxelToSlab6VOX(vox, voxsize, PByteArray(GetPaletteFromName(OtherPaletteEdit.Text)), 'vxtmp');
           end;
           wad.AddFile(PrefixEdit.Text, 'vxtmp');
           DeleteFile('vxtmp');
@@ -795,8 +812,10 @@ begin
           1: ms := BmpAsPatch(b, @HereticPaletteRaw);
           2: ms := BmpAsPatch(b, @HexenPaletteRaw);
           3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+          4: ms := BmpAsPatch(b, @RadixPaletteRaw);
+          5: ms := BmpAsPatch(b, @GLSpeedPaletteRaw);
           else
-            ms := BmpAsPatch(b, @RadixPaletteRaw);
+             ms := BmpAsPatch(b, PByteArray(GetPaletteFromName(OtherPaletteEdit.Text)));
           end;
           wad.AddData(PrefixEdit.Text + '0', ms.Memory, ms.Size);
           ms.Free;
@@ -817,8 +836,10 @@ begin
             1: ms := BmpAsPatch(b, @HereticPaletteRaw);
             2: ms := BmpAsPatch(b, @HexenPaletteRaw);
             3: ms := BmpAsPatch(b, @StrifePaletteRaw);
+            4: ms := BmpAsPatch(b, @RadixPaletteRaw);
+            5: ms := BmpAsPatch(b, @GLSpeedPaletteRaw);
             else
-              ms := BmpAsPatch(b, @RadixPaletteRaw);
+               ms := BmpAsPatch(b, PByteArray(GetPaletteFromName(OtherPaletteEdit.Text)));
             end;
             wad.AddData(PrefixEdit.Text + ROTATIONCHARS[rotchars[rot] + 1], ms.Memory, ms.Size);
             ms.Free;
@@ -923,6 +944,21 @@ begin
   voxRadioButton128x128.Checked := False;
   voxRadioButton256x256.Checked := False;
   AutoVoxSizeRadioButton.Checked := True;
+end;
+
+procedure TExportSpriteForm.LoadPaletteSpeedButtonClick(Sender: TObject);
+begin
+  if OpenPaletteDialog.Execute then
+    OtherPaletteEdit.Text := OpenPaletteDialog.FileName;
+end;
+
+procedure TExportSpriteForm.PatchRadioGroupClick(Sender: TObject);
+begin
+  ChooseOtherPalettePanel.Visible := PatchRadioGroup.ItemIndex = 6;
+  if ChooseOtherPalettePanel.Visible then
+    if visible then
+      if OtherPaletteEdit.Text = '' then
+        LoadPaletteSpeedButtonClick(Sender);
 end;
 
 end.

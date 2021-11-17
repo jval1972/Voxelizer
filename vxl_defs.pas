@@ -57,11 +57,13 @@ var
   opt_theta1: integer = 31416;
   opt_theta2: integer = 3926;
   opt_spritepal: integer = 0;
+  opt_customspritepal: bigstring_t;
   opt_spritescript: integer = 0;
   opt_spritevox: integer = 128;
   opt_dospritevox: integer = 0;
   opt_voxsize: integer = 128;
   opt_voxpal: integer = 0;
+  opt_customvoxpal: bigstring_t;
 
 function bigstringtostring(const bs: bigstring_p): string;
 
@@ -82,7 +84,7 @@ type
   end;
 
 const
-  NUMSETTINGS = 25;
+  NUMSETTINGS = 27;
 
 var
   Settings: array[0..NUMSETTINGS - 1] of TSettingItem = (
@@ -182,6 +184,11 @@ var
       location: @opt_spritepal;
     ),
     (
+      desc: 'CUSTOMSPRITEPALETTE';
+      typeof: tstBigString;
+      location: @opt_customspritepal;
+    ),
+    (
       desc: 'SPRITESCRIPT';
       typeof: tstInteger;
       location: @opt_spritescript;
@@ -210,6 +217,11 @@ var
       desc: 'VOXELPALETTE';
       typeof: tstInteger;
       location: @opt_voxpal;
+    ),
+    (
+      desc: 'CUSTOMVOXELPALETTE';
+      typeof: tstBigString;
+      location: @opt_customvoxpal;
     )
   );
 

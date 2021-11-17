@@ -56,6 +56,10 @@ type
     rightSpeedButton: TSpeedButton;
     topSpeedButton: TSpeedButton;
     bottomSpeedButton: TSpeedButton;
+    OpenPaletteDialog: TOpenDialog;
+    ChooseOtherPalettePanel: TPanel;
+    LoadPaletteSpeedButton: TSpeedButton;
+    OtherPaletteEdit: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FileNameEditChange(Sender: TObject);
@@ -63,6 +67,8 @@ type
     procedure SizeRadioGroupClick(Sender: TObject);
     procedure SpeedButtonClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure LoadPaletteSpeedButtonClick(Sender: TObject);
+    procedure PatchRadioGroupClick(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -119,10 +125,12 @@ begin
   else
     SizeRadioGroup.ItemIndex := 3;
 
-  if opt_voxpal in [0..4] then
+  if opt_voxpal in [0..6] then
     PatchRadioGroup.ItemIndex := opt_voxpal
   else
     PatchRadioGroup.ItemIndex := 0;
+  ChooseOtherPalettePanel.Visible := (PatchRadioGroup.ItemIndex = 6) and (PatchRadioGroup.Visible);
+  OtherPaletteEdit.Text := bigstringtostring(@opt_customvoxpal);
 end;
 
 procedure TExportVoxelForm.SetModelVoxelParams(const amodel: model_t; const avox: voxelbuffer_p;
@@ -175,6 +183,8 @@ var
   x, y: integer;
   ln: PLongWordArray;
 begin
+  ChooseOtherPalettePanel.Visible := (PatchRadioGroup.ItemIndex = 6) and (PatchRadioGroup.Visible);
+
   if (model = nil) or (vox = nil) or (modeltex = nil) then
     Exit;
 
@@ -253,6 +263,7 @@ begin
     uExt := UpperCase(ExtractFileExt(uName));
     e := (uExt = '.DDVOX') or (uExt = '.VOX');
     PatchRadioGroup.Visible := uExt = '.VOX';
+    ChooseOtherPalettePanel.Visible := (PatchRadioGroup.ItemIndex = 6) and (PatchRadioGroup.Visible);
   end;
   OKButton1.Enabled := e;
 end;
@@ -281,6 +292,21 @@ procedure TExportVoxelForm.FormDestroy(Sender: TObject);
 begin
   opt_voxsize := voxsize;
   opt_voxpal := PatchRadioGroup.ItemIndex;
+  stringtobigstring(OtherPaletteEdit.Text, @opt_customvoxpal);
+end;
+
+procedure TExportVoxelForm.LoadPaletteSpeedButtonClick(Sender: TObject);
+begin
+  if OpenPaletteDialog.Execute then
+    OtherPaletteEdit.Text := OpenPaletteDialog.FileName;
+end;
+
+procedure TExportVoxelForm.PatchRadioGroupClick(Sender: TObject);
+begin
+  ChooseOtherPalettePanel.Visible := (PatchRadioGroup.ItemIndex = 6) and (PatchRadioGroup.Visible);
+  if ChooseOtherPalettePanel.Visible then
+    if OtherPaletteEdit.Text = '' then
+      LoadPaletteSpeedButtonClick(Sender);
 end;
 
 end.

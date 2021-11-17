@@ -301,10 +301,6 @@ type
     B, G, R: Byte;
   end;
 
-  {Pointer to an array of bytes type}
-  TByteArray = Array[Word] of Byte;
-  pByteArray = ^TByteArray;
-
   {Forward}
   TPNGObject = class;
   pPointerArray = ^TPointerArray;

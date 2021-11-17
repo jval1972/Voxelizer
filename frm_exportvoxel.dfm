@@ -4,7 +4,7 @@ object ExportVoxelForm: TExportVoxelForm
   BorderStyle = bsDialog
   Caption = 'Export Voxel'
   ClientHeight = 476
-  ClientWidth = 524
+  ClientWidth = 574
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -1053,13 +1053,13 @@ object ExportVoxelForm: TExportVoxelForm
   object BottomPanel: TPanel
     Left = 0
     Top = 435
-    Width = 524
+    Width = 574
     Height = 41
     Align = alBottom
     Caption = ' '
     TabOrder = 0
     object ButtonPanel: TPanel
-      Left = 251
+      Left = 301
       Top = 1
       Width = 272
       Height = 39
@@ -1093,13 +1093,13 @@ object ExportVoxelForm: TExportVoxelForm
   object MainPanel: TPanel
     Left = 0
     Top = 0
-    Width = 524
+    Width = 574
     Height = 435
     Align = alClient
     Caption = ' '
     TabOrder = 1
     object PreviewGroupBox: TGroupBox
-      Left = 184
+      Left = 240
       Top = 64
       Width = 305
       Height = 345
@@ -2206,7 +2206,7 @@ object ExportVoxelForm: TExportVoxelForm
     object Panel1: TPanel
       Left = 1
       Top = 1
-      Width = 522
+      Width = 572
       Height = 41
       Align = alTop
       Caption = ' '
@@ -2215,7 +2215,7 @@ object ExportVoxelForm: TExportVoxelForm
       object Bevel2: TBevel
         Left = 1
         Top = 1
-        Width = 520
+        Width = 570
         Height = 15
         Align = alTop
         Shape = bsTopLine
@@ -2252,9 +2252,10 @@ object ExportVoxelForm: TExportVoxelForm
     object SizeRadioGroup: TRadioGroup
       Left = 24
       Top = 64
-      Width = 105
-      Height = 145
+      Width = 193
+      Height = 97
       Caption = ' Size '
+      Columns = 2
       ItemIndex = 3
       Items.Strings = (
         '32x32x32'
@@ -2266,19 +2267,51 @@ object ExportVoxelForm: TExportVoxelForm
     end
     object PatchRadioGroup: TRadioGroup
       Left = 24
-      Top = 224
-      Width = 105
-      Height = 185
+      Top = 184
+      Width = 193
+      Height = 137
       Caption = ' Palette '
+      Columns = 2
       ItemIndex = 0
       Items.Strings = (
         'Doom'
         'Heretic'
         'Hexen'
         'Strife'
-        'Radix')
+        'Radix'
+        'GLSpeed'
+        'Other...')
       TabOrder = 3
       Visible = False
+      OnClick = PatchRadioGroupClick
+    end
+    object ChooseOtherPalettePanel: TPanel
+      Left = 104
+      Top = 288
+      Width = 105
+      Height = 25
+      BevelOuter = bvNone
+      Caption = ' '
+      TabOrder = 4
+      Visible = False
+      object LoadPaletteSpeedButton: TSpeedButton
+        Left = 80
+        Top = 0
+        Width = 23
+        Height = 22
+        Hint = 'Select external palette'
+        Caption = '...'
+        Flat = True
+        OnClick = LoadPaletteSpeedButtonClick
+      end
+      object OtherPaletteEdit: TEdit
+        Left = 0
+        Top = 0
+        Width = 81
+        Height = 21
+        TabStop = False
+        TabOrder = 0
+      end
     end
   end
   object SaveVoxelDialog: TSaveDialog
@@ -2287,5 +2320,12 @@ object ExportVoxelForm: TExportVoxelForm
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 433
     Top = 48
+  end
+  object OpenPaletteDialog: TOpenDialog
+    DefaultExt = 'pal'
+    Filter = 'Palette Files (*.pal)|*.pal|All Files (*.*)|*.*'
+    Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
+    Left = 137
+    Top = 368
   end
 end

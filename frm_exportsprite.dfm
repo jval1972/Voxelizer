@@ -5,7 +5,7 @@ object ExportSpriteForm: TExportSpriteForm
   BorderStyle = bsDialog
   Caption = 'Export Sprite'
   ClientHeight = 486
-  ClientWidth = 764
+  ClientWidth = 784
   Color = clBtnFace
   Constraints.MinHeight = 480
   Constraints.MinWidth = 770
@@ -1051,204 +1051,17 @@ object ExportSpriteForm: TExportSpriteForm
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 16
-    Top = 16
-    Width = 22
-    Height = 13
-    Caption = 'File: '
-  end
-  object SelectFileButton: TSpeedButton
-    Left = 712
-    Top = 16
-    Width = 23
-    Height = 22
-    Caption = '...'
-    Flat = True
-    OnClick = SelectFileButtonClick
-  end
-  object Label5: TLabel
-    Left = 24
-    Top = 56
-    Width = 73
-    Height = 13
-    Caption = 'Editor Number: '
-  end
-  object FileNameEdit: TEdit
-    Left = 56
-    Top = 16
-    Width = 649
-    Height = 21
-    TabOrder = 0
-    OnChange = FileNameEditChange
-    OnDblClick = SelectFileButtonClick
-  end
-  object GeneralGroupBox: TGroupBox
-    Left = 16
-    Top = 48
-    Width = 201
-    Height = 65
-    Caption = ' General '
-    TabOrder = 1
-    object Label2: TLabel
-      Left = 16
-      Top = 24
-      Width = 32
-      Height = 13
-      Caption = 'Prefix: '
-      FocusControl = PrefixEdit
-    end
-    object SpritePrefixButton: TSpeedButton
-      Left = 112
-      Top = 24
-      Width = 23
-      Height = 22
-      Caption = '...'
-      Flat = True
-      OnClick = SpritePrefixButtonClick
-    end
-    object PrefixEdit: TEdit
-      Left = 56
-      Top = 24
-      Width = 57
-      Height = 21
-      CharCase = ecUpperCase
-      MaxLength = 5
-      TabOrder = 0
-      Text = 'VVVVA'
-    end
-  end
-  object PatchRadioGroup: TRadioGroup
-    Left = 232
-    Top = 128
-    Width = 177
-    Height = 145
-    Caption = ' Patch Palette '
-    ItemIndex = 0
-    Items.Strings = (
-      'Doom'
-      'Heretic'
-      'Hexen'
-      'Strife'
-      'Radix')
-    TabOrder = 4
-  end
-  object PreviewGroupBox: TGroupBox
-    Left = 427
-    Top = 48
-    Width = 326
-    Height = 345
-    Caption = ' Preview '
-    TabOrder = 6
-    object Panel3: TPanel
-      Left = 2
-      Top = 15
-      Width = 322
-      Height = 328
-      Align = alClient
-      BevelOuter = bvNone
-      BorderWidth = 4
-      Caption = ' '
-      TabOrder = 0
-      object PaintBox1: TPaintBox
-        Left = 4
-        Top = 4
-        Width = 256
-        Height = 256
-        Cursor = crCross
-        OnPaint = PaintBox1Paint
-      end
-      object Theta2IncButton1: TSpeedButton
-        Left = 273
-        Top = 264
-        Width = 36
-        Height = 22
-        Caption = '+'
-        Flat = True
-        OnClick = Theta2IncButton1Click
-      end
-      object Theta2DecButton1: TSpeedButton
-        Left = 273
-        Top = 288
-        Width = 36
-        Height = 22
-        Caption = '-'
-        Flat = True
-        OnClick = Theta2DecButton1Click
-      end
-      object Panel4: TPanel
-        Left = 260
-        Top = 4
-        Width = 58
-        Height = 256
-        BevelOuter = bvNone
-        Caption = ' '
-        TabOrder = 0
-        object ZoomInSpeedButton: TSpeedButton
-          Left = 9
-          Top = 0
-          Width = 36
-          Height = 22
-          Caption = '+'
-          Flat = True
-          Visible = False
-          OnClick = ZoomInSpeedButtonClick
-        end
-        object ZoomOutSpeedButton: TSpeedButton
-          Left = 9
-          Top = 24
-          Width = 36
-          Height = 22
-          Caption = '-'
-          Flat = True
-          Visible = False
-          OnClick = ZoomOutSpeedButtonClick
-        end
-        object HourglassLabel: TLabel
-          Left = 8
-          Top = 168
-          Width = 9
-          Height = 13
-          Caption = '   '
-        end
-        object ZoomTrackBar: TTrackBar
-          Left = 8
-          Top = 0
-          Width = 45
-          Height = 257
-          Max = 160
-          Min = 10
-          Orientation = trVertical
-          Position = 60
-          TabOrder = 0
-          TickMarks = tmBoth
-          OnChange = ZoomTrackBarChange
-        end
-      end
-      object RotateTrackBar: TTrackBar
-        Left = 0
-        Top = 272
-        Width = 268
-        Height = 41
-        Max = 120
-        Position = 60
-        TabOrder = 1
-        TickMarks = tmBoth
-        OnChange = RotateTrackBarChange
-      end
-    end
-  end
   object Panel1: TPanel
     Left = 0
     Top = 444
-    Width = 764
+    Width = 784
     Height = 42
     Align = alBottom
     BevelOuter = bvNone
     Caption = ' '
-    TabOrder = 7
+    TabOrder = 0
     object Panel2: TPanel
-      Left = 461
+      Left = 481
       Top = 0
       Width = 303
       Height = 42
@@ -1279,178 +1092,407 @@ object ExportSpriteForm: TExportSpriteForm
       end
     end
   end
-  object ScriptParametersGroupBox: TGroupBox
-    Left = 16
-    Top = 248
-    Width = 201
-    Height = 185
-    Caption = ' Script Parameters '
-    TabOrder = 3
-    object Label3: TLabel
+  object Panel3: TPanel
+    Left = 0
+    Top = 0
+    Width = 784
+    Height = 444
+    Align = alClient
+    BevelOuter = bvNone
+    Caption = ' '
+    TabOrder = 1
+    object Label1: TLabel
       Left = 16
-      Top = 24
-      Width = 34
+      Top = 16
+      Width = 22
       Height = 13
-      Caption = 'Name: '
-      FocusControl = ActorNameEdit
+      Caption = 'File: '
     end
-    object Label4: TLabel
-      Left = 16
-      Top = 54
+    object SelectFileButton: TSpeedButton
+      Left = 712
+      Top = 16
+      Width = 23
+      Height = 22
+      Caption = '...'
+      Flat = True
+      OnClick = SelectFileButtonClick
+    end
+    object Label5: TLabel
+      Left = 24
+      Top = 56
       Width = 73
       Height = 13
       Caption = 'Editor Number: '
-      FocusControl = EditorNumberEdit
     end
-    object Label6: TLabel
-      Left = 16
-      Top = 84
-      Width = 39
-      Height = 13
-      Caption = 'Radius: '
-      FocusControl = RadiusEdit
-    end
-    object HeightLabel: TLabel
-      Left = 16
-      Top = 114
-      Width = 37
-      Height = 13
-      Caption = 'Height: '
-      FocusControl = HeightEdit
-    end
-    object ActorNameEdit: TEdit
-      Left = 88
-      Top = 24
-      Width = 89
+    object FileNameEdit: TEdit
+      Left = 56
+      Top = 16
+      Width = 649
       Height = 21
-      MaxLength = 25
       TabOrder = 0
-      Text = 'Actor1'
+      OnChange = FileNameEditChange
+      OnDblClick = SelectFileButtonClick
     end
-    object EditorNumberEdit: TEdit
-      Left = 88
-      Top = 54
-      Width = 65
-      Height = 21
-      MaxLength = 5
+    object GeneralGroupBox: TGroupBox
+      Left = 16
+      Top = 48
+      Width = 201
+      Height = 65
+      Caption = ' General '
       TabOrder = 1
-      Text = '12000'
-      OnKeyPress = CheckNumericEdit
+      object Label2: TLabel
+        Left = 16
+        Top = 24
+        Width = 32
+        Height = 13
+        Caption = 'Prefix: '
+        FocusControl = PrefixEdit
+      end
+      object SpritePrefixButton: TSpeedButton
+        Left = 112
+        Top = 24
+        Width = 23
+        Height = 22
+        Caption = '...'
+        Flat = True
+        OnClick = SpritePrefixButtonClick
+      end
+      object PrefixEdit: TEdit
+        Left = 56
+        Top = 24
+        Width = 57
+        Height = 21
+        CharCase = ecUpperCase
+        MaxLength = 5
+        TabOrder = 0
+        Text = 'VVVVA'
+      end
     end
-    object RadiusEdit: TEdit
-      Left = 88
-      Top = 84
-      Width = 65
-      Height = 21
-      MaxLength = 3
+    object PatchRadioGroup: TRadioGroup
+      Left = 232
+      Top = 128
+      Width = 177
+      Height = 137
+      Caption = ' Patch Palette '
+      Columns = 2
+      ItemIndex = 0
+      Items.Strings = (
+        'Doom'
+        'Heretic'
+        'Hexen'
+        'Strife'
+        'Radix'
+        'GLSpeed'
+        'Other...')
       TabOrder = 2
-      Text = '64'
-      OnKeyPress = CheckNumericEdit
+      OnClick = PatchRadioGroupClick
     end
-    object HeightEdit: TEdit
-      Left = 88
-      Top = 114
-      Width = 65
-      Height = 21
-      MaxLength = 3
+    object PreviewGroupBox: TGroupBox
+      Left = 427
+      Top = 48
+      Width = 326
+      Height = 345
+      Caption = ' Preview '
       TabOrder = 3
-      Text = '128'
-      OnKeyPress = CheckNumericEdit
+      object Panel4: TPanel
+        Left = 2
+        Top = 15
+        Width = 322
+        Height = 328
+        Align = alClient
+        BevelOuter = bvNone
+        BorderWidth = 4
+        Caption = ' '
+        TabOrder = 0
+        object PaintBox1: TPaintBox
+          Left = 4
+          Top = 4
+          Width = 256
+          Height = 256
+          Cursor = crCross
+          OnPaint = PaintBox1Paint
+        end
+        object Theta2IncButton1: TSpeedButton
+          Left = 273
+          Top = 264
+          Width = 36
+          Height = 22
+          Caption = '+'
+          Flat = True
+          OnClick = Theta2IncButton1Click
+        end
+        object Theta2DecButton1: TSpeedButton
+          Left = 273
+          Top = 288
+          Width = 36
+          Height = 22
+          Caption = '-'
+          Flat = True
+          OnClick = Theta2DecButton1Click
+        end
+        object Panel5: TPanel
+          Left = 260
+          Top = 4
+          Width = 58
+          Height = 256
+          BevelOuter = bvNone
+          Caption = ' '
+          TabOrder = 0
+          object ZoomInSpeedButton: TSpeedButton
+            Left = 9
+            Top = 0
+            Width = 36
+            Height = 22
+            Caption = '+'
+            Flat = True
+            Visible = False
+            OnClick = ZoomInSpeedButtonClick
+          end
+          object ZoomOutSpeedButton: TSpeedButton
+            Left = 9
+            Top = 24
+            Width = 36
+            Height = 22
+            Caption = '-'
+            Flat = True
+            Visible = False
+            OnClick = ZoomOutSpeedButtonClick
+          end
+          object HourglassLabel: TLabel
+            Left = 8
+            Top = 168
+            Width = 9
+            Height = 13
+            Caption = '   '
+          end
+          object ZoomTrackBar: TTrackBar
+            Left = 8
+            Top = 0
+            Width = 45
+            Height = 257
+            Max = 160
+            Min = 10
+            Orientation = trVertical
+            Position = 60
+            TabOrder = 0
+            TickMarks = tmBoth
+            OnChange = ZoomTrackBarChange
+          end
+        end
+        object RotateTrackBar: TTrackBar
+          Left = 0
+          Top = 272
+          Width = 268
+          Height = 41
+          Max = 120
+          Position = 60
+          TabOrder = 1
+          TickMarks = tmBoth
+          OnChange = RotateTrackBarChange
+        end
+      end
     end
-    object SolidCheckBox: TCheckBox
+    object ScriptParametersGroupBox: TGroupBox
       Left = 16
-      Top = 152
-      Width = 97
-      Height = 17
-      Caption = 'MF_SOLID'
-      Checked = True
-      State = cbChecked
+      Top = 248
+      Width = 201
+      Height = 185
+      Caption = ' Script Parameters '
       TabOrder = 4
+      object Label3: TLabel
+        Left = 16
+        Top = 24
+        Width = 34
+        Height = 13
+        Caption = 'Name: '
+        FocusControl = ActorNameEdit
+      end
+      object Label4: TLabel
+        Left = 16
+        Top = 54
+        Width = 73
+        Height = 13
+        Caption = 'Editor Number: '
+        FocusControl = EditorNumberEdit
+      end
+      object Label6: TLabel
+        Left = 16
+        Top = 84
+        Width = 39
+        Height = 13
+        Caption = 'Radius: '
+        FocusControl = RadiusEdit
+      end
+      object HeightLabel: TLabel
+        Left = 16
+        Top = 114
+        Width = 37
+        Height = 13
+        Caption = 'Height: '
+        FocusControl = HeightEdit
+      end
+      object ActorNameEdit: TEdit
+        Left = 88
+        Top = 24
+        Width = 89
+        Height = 21
+        MaxLength = 25
+        TabOrder = 0
+        Text = 'Actor1'
+      end
+      object EditorNumberEdit: TEdit
+        Left = 88
+        Top = 54
+        Width = 65
+        Height = 21
+        MaxLength = 5
+        TabOrder = 1
+        Text = '12000'
+        OnKeyPress = CheckNumericEdit
+      end
+      object RadiusEdit: TEdit
+        Left = 88
+        Top = 84
+        Width = 65
+        Height = 21
+        MaxLength = 3
+        TabOrder = 2
+        Text = '64'
+        OnKeyPress = CheckNumericEdit
+      end
+      object HeightEdit: TEdit
+        Left = 88
+        Top = 114
+        Width = 65
+        Height = 21
+        MaxLength = 3
+        TabOrder = 3
+        Text = '128'
+        OnKeyPress = CheckNumericEdit
+      end
+      object SolidCheckBox: TCheckBox
+        Left = 16
+        Top = 152
+        Width = 97
+        Height = 17
+        Caption = 'MF_SOLID'
+        Checked = True
+        State = cbChecked
+        TabOrder = 4
+      end
     end
-  end
-  object ScriptRadioGroup: TRadioGroup
-    Left = 16
-    Top = 128
-    Width = 201
-    Height = 105
-    Caption = ' Script '
-    ItemIndex = 0
-    Items.Strings = (
-      'ACTORDEF (DelphiDoom/RAD)'
-      'DECORATE (ZDoom/K8Vavoom)'
-      'None')
-    TabOrder = 2
-    OnClick = ScriptRadioGroupClick
-  end
-  object VoxelGroupBox: TGroupBox
-    Left = 232
-    Top = 288
-    Width = 177
-    Height = 153
-    Caption = ' Voxel '
-    TabOrder = 5
-    object GenerateVoxelCheckBox: TCheckBox
+    object ScriptRadioGroup: TRadioGroup
       Left = 16
-      Top = 24
-      Width = 97
-      Height = 17
-      Caption = 'Generate voxel'
-      TabOrder = 0
-      OnClick = GenerateVoxelCheckBoxClick
+      Top = 128
+      Width = 201
+      Height = 105
+      Caption = ' Script '
+      ItemIndex = 0
+      Items.Strings = (
+        'ACTORDEF (DelphiDoom/RAD)'
+        'DECORATE (ZDoom/K8Vavoom)'
+        'None')
+      TabOrder = 5
+      OnClick = ScriptRadioGroupClick
     end
-    object voxRadioButton64x64: TRadioButton
-      Left = 16
-      Top = 52
-      Width = 113
-      Height = 17
-      Caption = '64 x 64'
-      TabOrder = 1
-      OnClick = voxRadioButton64x64Click
+    object VoxelGroupBox: TGroupBox
+      Left = 232
+      Top = 280
+      Width = 177
+      Height = 153
+      Caption = ' Voxel '
+      TabOrder = 6
+      object GenerateVoxelCheckBox: TCheckBox
+        Left = 16
+        Top = 24
+        Width = 97
+        Height = 17
+        Caption = 'Generate voxel'
+        TabOrder = 0
+        OnClick = GenerateVoxelCheckBoxClick
+      end
+      object voxRadioButton64x64: TRadioButton
+        Left = 16
+        Top = 52
+        Width = 113
+        Height = 17
+        Caption = '64 x 64'
+        TabOrder = 1
+        OnClick = voxRadioButton64x64Click
+      end
+      object voxRadioButton128x128: TRadioButton
+        Left = 16
+        Top = 74
+        Width = 89
+        Height = 17
+        Caption = '128 x 128'
+        TabOrder = 2
+        OnClick = voxRadioButton128x128Click
+      end
+      object voxRadioButton256x256: TRadioButton
+        Left = 16
+        Top = 96
+        Width = 113
+        Height = 17
+        Caption = '256 x 256'
+        TabOrder = 3
+        OnClick = voxRadioButton256x256Click
+      end
+      object AutoVoxSizeRadioButton: TRadioButton
+        Left = 16
+        Top = 120
+        Width = 113
+        Height = 17
+        Caption = 'Auto'
+        Checked = True
+        TabOrder = 4
+        TabStop = True
+        OnClick = AutoVoxSizeRadioButtonClick
+      end
     end
-    object voxRadioButton128x128: TRadioButton
-      Left = 16
-      Top = 74
-      Width = 89
-      Height = 17
-      Caption = '128 x 128'
-      TabOrder = 2
-      OnClick = voxRadioButton128x128Click
+    object RotationsRadioGroup: TRadioGroup
+      Left = 232
+      Top = 48
+      Width = 177
+      Height = 65
+      Caption = ' Rotations '
+      Columns = 2
+      ItemIndex = 0
+      Items.Strings = (
+        '1 Rotation'
+        '8 Rotations'
+        '16 Rotations'
+        '32 Rotations')
+      TabOrder = 7
     end
-    object voxRadioButton256x256: TRadioButton
-      Left = 16
-      Top = 96
-      Width = 113
-      Height = 17
-      Caption = '256 x 256'
-      TabOrder = 3
-      OnClick = voxRadioButton256x256Click
+    object ChooseOtherPalettePanel: TPanel
+      Left = 296
+      Top = 232
+      Width = 105
+      Height = 25
+      BevelOuter = bvNone
+      Caption = ' '
+      TabOrder = 8
+      Visible = False
+      object LoadPaletteSpeedButton: TSpeedButton
+        Left = 80
+        Top = 0
+        Width = 23
+        Height = 22
+        Hint = 'Select external palette'
+        Caption = '...'
+        Flat = True
+        OnClick = LoadPaletteSpeedButtonClick
+      end
+      object OtherPaletteEdit: TEdit
+        Left = 0
+        Top = 0
+        Width = 81
+        Height = 21
+        TabStop = False
+        TabOrder = 0
+      end
     end
-    object AutoVoxSizeRadioButton: TRadioButton
-      Left = 16
-      Top = 120
-      Width = 113
-      Height = 17
-      Caption = 'Auto'
-      Checked = True
-      TabOrder = 4
-      TabStop = True
-      OnClick = AutoVoxSizeRadioButtonClick
-    end
-  end
-  object RotationsRadioGroup: TRadioGroup
-    Left = 232
-    Top = 48
-    Width = 177
-    Height = 65
-    Caption = ' Rotations '
-    Columns = 2
-    ItemIndex = 0
-    Items.Strings = (
-      '1 Rotation'
-      '8 Rotations'
-      '16 Rotations'
-      '32 Rotations')
-    TabOrder = 8
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'pk3'
@@ -1464,5 +1506,12 @@ object ExportSpriteForm: TExportSpriteForm
     OnTimer = Timer1Timer
     Left = 504
     Top = 376
+  end
+  object OpenPaletteDialog: TOpenDialog
+    DefaultExt = 'pal'
+    Filter = 'Palette Files (*.pal)|*.pal|All Files (*.*)|*.*'
+    Options = [ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
+    Left = 393
+    Top = 200
   end
 end
