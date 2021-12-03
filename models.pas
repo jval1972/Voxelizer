@@ -92,10 +92,12 @@ begin
     if abs(x - mVert[i].x) < EPSILON then
       if abs(y - mVert[i].y) < EPSILON then
         if abs(z - mVert[i].z) < EPSILON then
-        begin
-          Result := i;
-          Exit;
-        end;
+          if abs(u - mVert[i].u) < EPSILON then
+            if abs(v - mVert[i].v) < EPSILON then
+            begin
+              Result := i;
+              Exit;
+            end;
 
   Result := mVertCount;
   inc(mVertCount);
